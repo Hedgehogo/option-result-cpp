@@ -1,0 +1,24 @@
+cmake_minimum_required(VERSION 3.24)
+project(option_result_cpp)
+
+include(FetchContent)
+
+set(CMAKE_CXX_STANDARD 17)
+
+
+file(GLOB_RECURSE test_src "tests/*.hpp" "tests/*.cpp")
+
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest
+        GIT_TAG        v1.13.0
+        FIND_PACKAGE_ARGS NAMES googletest
+)
+
+FetchContent_MakeAvailable(googletest)
+
+add_executable(${PROJECT_NAME}_tests ${test_src})
+
+target_include_directories(${PROJECT_NAME}_tests PRIVATE lib/)
+
+target_link_libraries(${PROJECT_NAME}_tests PRIVATE gtest gtest_main)
