@@ -7,6 +7,11 @@ namespace orl {
 	template<typename T, typename E>
 	class Result;
 	
+	namespace detail {
+		template<typename T>
+		class Option;
+	}
+	
 	template<typename T_>
 	class Option final : public detail::Option<T_> {
 	public:
