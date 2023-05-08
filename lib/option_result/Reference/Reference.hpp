@@ -4,9 +4,6 @@
 namespace orl {
 	namespace detail {
 		template<typename T>
-		class Option;
-		
-		template<typename T>
 		struct MetaFn {
 			using type = T;
 		};
