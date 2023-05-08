@@ -34,7 +34,7 @@ namespace orl {
 		Result<T, const T_&> error_or(const T& ok) const noexcept;
 		
 		template<typename E>
-		const T_& except(const E& exception) const;
+		const T_& except(const E& exception = std::runtime_error("Some was requested, but the orl::Option was None")) const;
 		
 		std::optional<T_> optional() const noexcept;
 		

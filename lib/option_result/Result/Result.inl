@@ -2,27 +2,27 @@
 
 namespace orl {
 	template<typename T_, typename E_>
-	Result<T_, E_>::Result(bool is_ok_, const Data& data_) : is_ok_(is_ok_), data_(std::move(data_)) {
+	Result<T_, E_>::Result(const Data& data) : data_(std::move(data)) {
 	}
 	
 	template<typename T_, typename E_>
 	Result<T_, E_> Result<T_, E_>::Ok(const T_& value) noexcept {
-		return Result<T_, E_>(true, Data{.ok_{value}});
+		return Result<T_, E_>(Data{std::in_place_index<0>, value});
 	}
 	
 	template<typename T_, typename E_>
 	Result<T_, E_> Result<T_, E_>::Error(const E_& value) noexcept {
-		return Result<T_, E_>(false, Data{.error_{value}});
+		return Result<T_, E_>(Data{std::in_place_index<1>, value});
 	}
 	
 	template<typename T_, typename E_>
 	bool Result<T_, E_>::is_ok() const noexcept {
-		return is_ok_;
+		return data_.index() == 0;
 	}
 	
 	template<typename T_, typename E_>
 	const T_& Result<T_, E_>::ok() const noexcept {
-		return data_.ok_;
+		return std::get<0>(data_);
 	}
 	
 	template<typename T_, typename E_>
@@ -44,12 +44,12 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	const T_& Result<T_, E_>::error() const noexcept {
-		return data_.error_;
+	const E_& Result<T_, E_>::error() const noexcept {
+		return std::get<1>(data_);
 	}
 	
 	template<typename T_, typename E_>
-	const T_& Result<T_, E_>::error_or(const T_& value) const noexcept {
+	const E_& Result<T_, E_>::error_or(const E_& value) const noexcept {
 		if(is_ok()) {
 			return value;
 		} else {

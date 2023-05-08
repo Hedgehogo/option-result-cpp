@@ -1,5 +1,6 @@
 #pragma once
 
+#include <variant>
 #include "../Reference/Reference.hpp"
 
 namespace orl {
@@ -9,15 +10,7 @@ namespace orl {
 	template<typename T_, typename E_>
 	class Result {
 	protected:
-		union Data {
-			~Data() {
-			}
-			
-			ref<T_> ok_;
-			ref<E_> error_;
-		};
-		
-		Result(bool is_ok_, const Data& data_);
+		using Data = std::variant<ref<T_>, ref<E_>>;
 	
 	public:
 		static Result<T_, E_> Ok(const T_& value) noexcept;
@@ -32,9 +25,9 @@ namespace orl {
 		
 		Option<const T_&> ok_or_none() const noexcept;
 		
-		const T_& error() const noexcept;
+		const E_& error() const noexcept;
 		
-		const T_& error_or(const T_& value) const noexcept;
+		const E_& error_or(const E_& value) const noexcept;
 		
 		Option<const E_&> error_or_none() const noexcept;
 		
@@ -58,7 +51,8 @@ namespace orl {
 		bool operator ==(Result<T, E> const& other) const noexcept;
 	
 	private:
+		Result(const Data& data);
+		
 		Data data_;
-		bool is_ok_;
 	};
 }
