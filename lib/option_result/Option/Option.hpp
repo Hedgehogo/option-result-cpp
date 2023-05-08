@@ -46,41 +46,41 @@ namespace orl {
 	};
 	
 	namespace detail {
-		template<typename T>
+		template<typename T_>
 		class Option {
 		private:
-			std::optional<ref<T>> data_;
+			std::optional<ref<T_>> data_;
 		
 		public:
-			Option(const T& data) noexcept;
+			Option(T_ const& data) noexcept;
 			
 			Option() noexcept;
 			
 			bool is_some() const noexcept;
 			
-			T& some() noexcept;
+			T_& some() noexcept;
 			
-			const T& some() const noexcept;
+			T_ const& some() const noexcept;
 		};
 		
-		template<typename T>
-		class Option<T*> {
+		template<typename T_>
+		class Option<T_*> {
 		private:
-			T* data_;
+			T_* data_;
 		
 		public:
-			Option(const T*& data) noexcept;
+			Option(T_* const& data) noexcept;
 			
 			Option() noexcept;
 			
 			bool is_some() const noexcept;
 			
-			T*& some() noexcept;
+			T_*& some() noexcept;
 			
-			const T*& some() const noexcept;
+			T_* const& some() const noexcept;
 			
-			template<typename... A>
-			const T*& some_or_ptr(A&& ... args) const noexcept;
+			template<typename R = T_, typename... A>
+			R* some_or_ptr(A&& ... args) const noexcept;
 		};
 	}
 }

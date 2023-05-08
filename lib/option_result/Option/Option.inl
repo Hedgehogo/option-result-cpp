@@ -111,12 +111,12 @@ namespace orl {
 		}
 		
 		template<typename T_>
-		const T_& Option<T_>::some() const noexcept {
+		T_ const& Option<T_>::some() const noexcept {
 			return *data_;
 		}
 		
 		template<typename T_>
-		Option<T_*>::Option(const T_*& data) noexcept : data_(data) {
+		Option<T_*>::Option(T_* const& data) noexcept : data_(data) {
 		}
 		
 		template<typename T_>
@@ -130,21 +130,21 @@ namespace orl {
 		
 		template<typename T_>
 		T_*& Option<T_*>::some() noexcept {
-			return *data_;
+			return data_;
 		}
 		
 		template<typename T_>
-		const T_*& Option<T_*>::some() const noexcept {
-			return *data_;
+		T_* const& Option<T_*>::some() const noexcept {
+			return data_;
 		}
 		
 		template<typename T_>
-		template<typename... A>
-		const T_*& Option<T_*>::some_or_ptr(A&& ... args) const noexcept {
+		template<typename R, typename... A>
+		R* Option<T_*>::some_or_ptr(A&& ... args) const noexcept {
 			if(is_some()) {
 				return some();
 			} else {
-				return new T_{std::forward<A...>(args)...};
+				return new R{std::forward<A...>(args)...};
 			}
 		}
 	}
