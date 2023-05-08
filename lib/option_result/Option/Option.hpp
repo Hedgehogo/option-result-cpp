@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <stdexcept>
 #include "../Reference/Reference.hpp"
 
 namespace orl {
