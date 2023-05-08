@@ -40,21 +40,21 @@ namespace orl {
 	
 	template<typename T_>
 	template<typename E>
-	Result<T_, E> Option<T_>::ok_or(const E& error) const noexcept {
+	Result<const T_&, E> Option<T_>::ok_or(const E& error) const noexcept {
 		if(this->is_some()) {
-			return Result<T_, E>::Ok(this->some());
+			return Result<const T_&, E>::Ok(this->some());
 		} else {
-			return Result<T_, E>::Error(error);
+			return Result<const T_&, E>::Error(error);
 		}
 	}
 	
 	template<typename T_>
-	template<typename E>
-	Result<T_, E> Option<T_>::error_or(const E& ok) const noexcept {
+	template<typename T>
+	Result<T, const T_&> Option<T_>::error_or(const T& ok) const noexcept {
 		if(this->is_some()) {
-			return Result<T_, E>::Error(this->some());
+			return Result<T, const T_&>::Error(this->some());
 		} else {
-			return Result<T_, E>::Ok(ok);
+			return Result<T, const T_&>::Ok(ok);
 		}
 	}
 	
@@ -83,7 +83,8 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	bool Option<T_>::operator==(const Option<T_>& other) const noexcept {
+	template<typename T>
+	bool Option<T_>::operator==(const Option<T>& other) const noexcept {
 		if(this->is_some() && other.is_some()) {
 			return this->some() == other.some();
 		}

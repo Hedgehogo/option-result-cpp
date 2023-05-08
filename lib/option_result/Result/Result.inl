@@ -35,11 +35,11 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	Option<T_> Result<T_, E_>::ok_or_none() const noexcept {
+	Option<const T_&> Result<T_, E_>::ok_or_none() const noexcept {
 		if(is_ok()) {
-			return Option<T_>{ok()};
+			return Option<const T_&>{ok()};
 		} else {
-			return Option<T_>{};
+			return Option<const T_&>{};
 		}
 	}
 	
@@ -58,11 +58,11 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	Option<E_> Result<T_, E_>::error_or_none() const noexcept {
+	Option<const E_&> Result<T_, E_>::error_or_none() const noexcept {
 		if(is_ok()) {
-			return Option<E_>{};
+			return Option<const E_&>{};
 		} else {
-			return Option<E_>{error()};
+			return Option<const E_&>{error()};
 		}
 	}
 	
@@ -121,7 +121,8 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	bool Result<T_, E_>::operator==(const Result<T_, E_>& other) const noexcept {
+	template<typename T, typename E>
+	bool Result<T_, E_>::operator==(const Result<T, E>& other) const noexcept {
 		if(is_ok() == other.is_ok()) {
 			if(is_ok()) {
 				return ok() == other.ok();

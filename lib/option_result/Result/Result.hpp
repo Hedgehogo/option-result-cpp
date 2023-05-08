@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Reference/Reference.hpp"
+
 namespace orl {
 	template<typename T>
 	class Option;
@@ -11,8 +13,8 @@ namespace orl {
 			~Data() {
 			}
 			
-			T_ ok_;
-			E_ error_;
+			ref<T_> ok_;
+			ref<E_> error_;
 		};
 		
 		Result(bool is_ok_, const Data& data_);
@@ -28,13 +30,13 @@ namespace orl {
 		
 		const T_& ok_or(const T_& value) const noexcept;
 		
-		Option<T_> ok_or_none() const noexcept;
+		Option<const T_&> ok_or_none() const noexcept;
 		
 		const T_& error() const noexcept;
 		
 		const T_& error_or(const T_& value) const noexcept;
 		
-		Option<E_> error_or_none() const noexcept;
+		Option<const E_&> error_or_none() const noexcept;
 		
 		template<typename R>
 		R convert_ok_or(const R& value, std::function<R(const T_&)> func) const noexcept;
@@ -52,7 +54,8 @@ namespace orl {
 		
 		operator bool() const noexcept;
 		
-		bool operator ==(Result<T_, E_> const& other) const noexcept;
+		template<typename T, typename E>
+		bool operator ==(Result<T, E> const& other) const noexcept;
 	
 	private:
 		Data data_;

@@ -1,16 +1,11 @@
 #pragma once
 
 #include <optional>
-#include <functional>
+#include "../Reference/Reference.hpp"
 
 namespace orl {
 	template<typename T, typename E>
 	class Result;
-	
-	namespace detail {
-		template<typename T>
-		class Option;
-	}
 	
 	template<typename T_>
 	class Option final : public detail::Option<T_> {
@@ -28,10 +23,10 @@ namespace orl {
 		R* convert_or_ptr(std::function<R*(const T_&)> func, A&& ... value_args) const noexcept;
 		
 		template<typename E>
-		Result<T_, E> ok_or(const E& error) const noexcept;
+		Result<const T_&, E> ok_or(const E& error) const noexcept;
 		
-		template<typename O>
-		Result<T_, O> error_or(const O& ok) const noexcept;
+		template<typename T>
+		Result<T, const T_&> error_or(const T& ok) const noexcept;
 		
 		template<typename E>
 		const T_& except(const E& exception) const;
@@ -40,14 +35,15 @@ namespace orl {
 		
 		operator bool() const noexcept;
 		
-		bool operator ==(Option<T_> const& other) const noexcept;
+		template<typename T>
+		bool operator ==(Option<T> const& other) const noexcept;
 	};
 	
 	namespace detail {
 		template<typename T>
 		class Option {
 		private:
-			std::optional<T> data_;
+			std::optional<ref<T>> data_;
 		
 		public:
 			Option(const T& data) noexcept;
