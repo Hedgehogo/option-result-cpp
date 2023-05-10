@@ -10,17 +10,17 @@ namespace orl {
 		/// @brief Gets an error note.
 		///
 		/// @return Error note.
-		virtual std::string getNote() const;
+		virtual std::string get_note() const;
 		
 		/// @brief Gets an error description.
 		///
 		/// @return Error description.
-		virtual std::string getDescription() const = 0;
+		virtual std::string get_description() const = 0;
 		
 		/// @brief Gets a full description of the error.
 		///
 		/// @return Error note + description.
-		std::string getFullDescription() const;
+		std::string get_full_description() const;
 		
 		const char* what() const noexcept final;
 	};
