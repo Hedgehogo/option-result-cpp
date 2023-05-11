@@ -61,11 +61,10 @@ namespace orl {
 	template<typename T_>
 	template<typename E>
 	const T_& Option<T_>::except(const E& exception) const {
-		if(this->is_some()) {
-			return this->some();
-		} else {
-			throw exception;
+		if(!this->is_some()) {
+			orl::except(exception);
 		}
+		return this->some();
 	}
 	
 	template<typename T_>

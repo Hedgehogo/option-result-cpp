@@ -128,11 +128,10 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	T_ const& Result<T_, E_>::except() const {
-		if(is_ok()) {
-			return ok();
-		} else {
-			throw error();
+		if(!is_ok()) {
+			orl::except(error());
 		}
+		return ok();
 	}
 	
 	template<typename T_, typename E_>

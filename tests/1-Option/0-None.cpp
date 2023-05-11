@@ -41,6 +41,7 @@ TEST(Option, None_5_convert_or_ptr) {
 TEST(Option, None_6_except) {
 	orl::Option<int> opt{};
 	
+	ASSERT_THROW(opt.except(), std::runtime_error);
 	ASSERT_THROW(opt.except(std::runtime_error("")), std::runtime_error);
 }
 

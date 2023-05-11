@@ -16,6 +16,13 @@ public:
 	}
 };
 
+class ThirdError : public orl::BaseException {
+public:
+	std::string get_description() const override {
+		return std::string{"Third"};
+	}
+};
+
 TEST(Error, First) {
 	orl::Error<FirstError, SecondError> error{FirstError{}};
 	
@@ -33,3 +40,19 @@ TEST(Error, Second) {
 	ASSERT_EQ(error.get_full_description(), std::string{"1: Second"});
 	ASSERT_EQ(error.common<orl::BaseException>().get_full_description(), std::string{"Second"});
 }
+
+TEST(Error, except) {
+	ASSERT_THROW(orl::except(std::runtime_error("")), std::runtime_error);
+	ASSERT_THROW(orl::except(orl::Error<FirstError, SecondError>{FirstError{}}), FirstError);
+	ASSERT_THROW(orl::except(orl::Error<FirstError, SecondError>{SecondError{}}), SecondError);
+	ASSERT_THROW(
+		orl::except(
+			orl::Error<FirstError, orl::Error<SecondError, ThirdError>>{
+				orl::Error<SecondError, ThirdError>{ThirdError{}}
+			}
+		),
+		ThirdError
+	);
+}
+
+

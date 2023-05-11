@@ -3,6 +3,7 @@
 #include <optional>
 #include <stdexcept>
 #include "../Reference/Reference.hpp"
+#include "../Error/Error.hpp"
 
 namespace orl {
 	template<typename T, typename E>
@@ -34,7 +35,7 @@ namespace orl {
 		template<typename T>
 		Result<T, const T_&> error_or(const T& ok) const noexcept;
 		
-		template<typename E>
+		template<typename E = std::runtime_error>
 		const T_& except(const E& exception = std::runtime_error("Some was requested, but the orl::Option was None")) const;
 		
 		std::optional<T_> optional() const noexcept;
