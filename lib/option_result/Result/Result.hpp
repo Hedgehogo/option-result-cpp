@@ -58,7 +58,7 @@ namespace orl {
 		bool operator ==(Result<T, E> const& other) const noexcept;
 	
 	private:
-		Result(Data const& data);
+		Result(Data&& data);
 		
 		Data data_;
 	};

@@ -27,6 +27,14 @@ namespace orl {
 		
 		template<typename R>
 		R const& common() const;
+		
+		template<typename... Ts>
+		Error<Ts...> move_cast();
+		
+		template<typename... Ts>
+		Error<Ts_..., Ts...> move_upcast();
+		
+		const std::variant<Ts_...>& variant() const;
 	};
 	
 	namespace detail {

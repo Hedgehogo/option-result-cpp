@@ -30,6 +30,8 @@ TEST(Error, First) {
 	ASSERT_EQ(error.get_description(), std::string{"First"});
 	ASSERT_EQ(error.get_full_description(), std::string{"0: First"});
 	ASSERT_EQ(error.common<orl::BaseException>().get_full_description(), std::string{"First"});
+	ASSERT_EQ((error.move_cast<FirstError, SecondError, ThirdError>().get_description()), std::string{"First"});
+	ASSERT_EQ((error.move_upcast<ThirdError>().get_description()), std::string{"First"});
 }
 
 TEST(Error, Second) {
@@ -39,6 +41,8 @@ TEST(Error, Second) {
 	ASSERT_EQ(error.get_description(), std::string{"Second"});
 	ASSERT_EQ(error.get_full_description(), std::string{"1: Second"});
 	ASSERT_EQ(error.common<orl::BaseException>().get_full_description(), std::string{"Second"});
+	ASSERT_EQ((error.move_cast<FirstError, SecondError, ThirdError>().get_description()), std::string{"Second"});
+	ASSERT_EQ((error.move_upcast<ThirdError>().get_description()), std::string{"Second"});
 }
 
 TEST(Error, except) {

@@ -2,7 +2,7 @@
 
 namespace orl {
 	template<typename T_, typename E_>
-	Result<T_, E_>::Result(Data const& data) : data_(std::move(data)) {
+	Result<T_, E_>::Result(Data&& data) : data_(std::forward<Data>(data)) {
 	}
 	
 	template<typename T_, typename E_>

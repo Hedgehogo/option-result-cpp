@@ -43,6 +43,24 @@ namespace orl {
 		return std::visit(func, errors_);
 	}
 	
+	template<typename... Ts_>
+	template<typename... Ts>
+	Error<Ts...> Error<Ts_...>::move_cast() {
+		auto func{[](auto& exception) { return Error<Ts...>{std::move(exception)}; }};
+		return std::visit(func, errors_);
+	}
+	
+	template<typename... Ts_>
+	template<typename... Ts>
+	Error<Ts_..., Ts...> Error<Ts_...>::move_upcast() {
+		return move_cast<Ts_..., Ts...>();
+	}
+	
+	template<typename... Ts_>
+	const std::variant<Ts_...>& Error<Ts_...>::variant() const {
+		return errors_;
+	}
+	
 	template<typename T>
 	void except(const T& exception) {
 		if constexpr(is_error<T>) {
