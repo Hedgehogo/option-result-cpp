@@ -20,6 +20,8 @@ namespace orl {
 		
 		bool is_ok() const noexcept;
 		
+		T_& ok() noexcept;
+		
 		T_ const& ok() const noexcept;
 		
 		T_ const& ok_or(T_ const& value) const noexcept;
@@ -28,6 +30,8 @@ namespace orl {
 		R* ok_or_ptr(A&& ... args) const noexcept;
 		
 		Option<const T_&> ok_or_none() const noexcept;
+		
+		E_& error() noexcept;
 		
 		E_ const& error() const noexcept;
 		

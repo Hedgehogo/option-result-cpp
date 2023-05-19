@@ -21,6 +21,11 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
+	T_& Result<T_, E_>::ok() noexcept {
+		return std::get<0>(data_);
+	}
+	
+	template<typename T_, typename E_>
 	T_ const& Result<T_, E_>::ok() const noexcept {
 		return std::get<0>(data_);
 	}
@@ -51,6 +56,11 @@ namespace orl {
 		} else {
 			return Option<const T_&>{};
 		}
+	}
+	
+	template<typename T_, typename E_>
+	E_& Result<T_, E_>::error() noexcept {
+		return std::get<1>(data_);
 	}
 	
 	template<typename T_, typename E_>
