@@ -1,5 +1,6 @@
 #include "BaseException.hpp"
 #include <cstring>
+#include <ostream>
 
 namespace orl {
 	std::string BaseException::get_note() const {
@@ -13,7 +14,7 @@ namespace orl {
 	const char* BaseException::what() const noexcept {
 		std::string str{get_full_description()};
 		char* result{new char[str.size() + 1]{}};
-		strcpy(result, str.c_str());
+		std::strcpy(result, str.c_str());
 		return result;
 	}
 	
