@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <option_result.hpp>
+#include <option_result/option_result.hpp>
 
 TEST(Result, Error_1_error) {
 	auto res{orl::Result<int, int>::Error(15)};

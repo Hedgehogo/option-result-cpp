@@ -8,8 +8,18 @@ set(CMAKE_CXX_STANDARD 17)
 
 file(GLOB_RECURSE src "lib/*.hpp" "lib/*.cpp")
 
+if (${CMAKE_BUILD_TYPE} STREQUAL Release)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/lib/" DESTINATION "${CMAKE_CURRENT_LIST_DIR}/include/")
+    file(GLOB_RECURSE filesToRemove "include/*.cpp")
+    file(REMOVE ${filesToRemove})
+endif ()
+
 add_library(${PROJECT_NAME} ${src})
 
+target_include_directories(${PROJECT_NAME} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+        )
 
 file(GLOB_RECURSE test_src "tests/*.hpp" "tests/*.cpp")
 
@@ -17,7 +27,7 @@ FetchContent_Declare(
         googletest
         GIT_REPOSITORY https://github.com/google/googletest
         GIT_TAG        v1.13.0
-        FIND_PACKAGE_ARGS NAMES googletest
+        FIND_PACKAGE_ARGS NAMES GTest
 )
 
 FetchContent_MakeAvailable(googletest)
@@ -27,3 +37,17 @@ add_executable(${PROJECT_NAME}_tests ${test_src})
 target_include_directories(${PROJECT_NAME}_tests PRIVATE lib/)
 
 target_link_libraries(${PROJECT_NAME}_tests PRIVATE gtest gtest_main ${PROJECT_NAME})
+
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+install(TARGETS ${PROJECT_NAME}
+        EXPORT ${PROJECT_NAME}
+        LIBRARY DESTINATION lib
+        PUBLIC_HEADER DESTINATION include/${PROJECT_NAME}
+        )
+
+install(EXPORT ${PROJECT_NAME}
+        FILE ${PROJECT_NAME}Config.cmake
+        NAMESPACE ${PROJECT_NAME}::
+        DESTINATION lib/cmake/${PROJECT_NAME}
+        )
