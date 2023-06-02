@@ -5,19 +5,12 @@ include(FetchContent)
 
 set(CMAKE_CXX_STANDARD 17)
 
-
 file(GLOB_RECURSE src "lib/*.hpp" "lib/*.cpp")
-
-if (${CMAKE_BUILD_TYPE} STREQUAL Release)
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/lib/" DESTINATION "${CMAKE_CURRENT_LIST_DIR}/include/")
-    file(GLOB_RECURSE filesToRemove "include/*.cpp")
-    file(REMOVE ${filesToRemove})
-endif ()
 
 add_library(${PROJECT_NAME} ${src})
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib>
         $<INSTALL_INTERFACE:include>
         )
 
@@ -34,11 +27,9 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(${PROJECT_NAME}_tests ${test_src})
 
-target_include_directories(${PROJECT_NAME}_tests PRIVATE lib/)
-
 target_link_libraries(${PROJECT_NAME}_tests PRIVATE gtest gtest_main ${PROJECT_NAME})
 
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/option_result DESTINATION ${CMAKE_INSTALL_PREFIX}/include PATTERN "*.hpp")
 
 install(TARGETS ${PROJECT_NAME}
         EXPORT ${PROJECT_NAME}
