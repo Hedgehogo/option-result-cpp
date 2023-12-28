@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <option_result.hpp>
+#include <option_result/option_result.hpp>
 
 TEST(Option, None_1_is_some) {
 	orl::Option<int> opt{};

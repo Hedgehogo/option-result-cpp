@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <option_result.hpp>
+#include <option_result/option_result.hpp>
 
 TEST(Conversion_Result, Ok_1_ok_or_none) {
 	auto res{orl::Result<int, int>::Ok(5)};
