@@ -17,7 +17,7 @@ namespace orl {
 	template<typename T_>
 	class Option {
 	public:
-		Option(const T_& data) noexcept;
+		Option(T_ data) noexcept;
 		
 		Option() noexcept;
 		
@@ -33,10 +33,10 @@ namespace orl {
 		R* some_or_ptr(A&& ... args) const noexcept;
 		
 		template<typename R>
-		R convert_or(const R& value, std::function<R(const T_&)> func) const noexcept;
+		R convert_or(const R& value, std::function<R(const T_&)> func) const;
 		
 		template<typename R, typename... A>
-		R* convert_or_ptr(std::function<R*(const T_&)> func, A&& ... value_args) const noexcept;
+		R* convert_or_ptr(std::function<R*(const T_&)> func, A&& ... value_args) const;
 		
 		template<typename E>
 		Result<const T_&, E> ok_or(const E& error) const noexcept;
@@ -62,10 +62,10 @@ namespace orl {
 		template<typename T_>
 		class OptionImpl {
 		private:
-			std::optional<ref<T_>> data_;
+			std::optional<ref<T_> > data_;
 		
 		public:
-			OptionImpl(T_ const& data) noexcept;
+			OptionImpl(T_ data) noexcept;
 			
 			OptionImpl() noexcept;
 			
@@ -82,7 +82,7 @@ namespace orl {
 			T_* data_;
 		
 		public:
-			OptionImpl(T_* const& data) noexcept;
+			OptionImpl(T_* data) noexcept;
 			
 			OptionImpl() noexcept;
 			

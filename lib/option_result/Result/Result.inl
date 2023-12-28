@@ -6,13 +6,13 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	Result<T_, E_> Result<T_, E_>::Ok(T_ const& value) noexcept {
-		return Result<T_, E_>(Data{std::in_place_index<0>, value});
+	Result<T_, E_> Result<T_, E_>::Ok(T_ value) noexcept {
+		return Result<T_, E_>(Data{std::in_place_index<0>, std::forward<T_>(value)});
 	}
 	
 	template<typename T_, typename E_>
-	Result<T_, E_> Result<T_, E_>::Error(E_ const& value) noexcept {
-		return Result<T_, E_>(Data{std::in_place_index<1>, value});
+	Result<T_, E_> Result<T_, E_>::Error(E_ value) noexcept {
+		return Result<T_, E_>(Data{std::in_place_index<1>, std::forward<E_>(value)});
 	}
 	
 	template<typename T_, typename E_>
@@ -98,7 +98,7 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename R>
-	R Result<T_, E_>::convert_ok_or(const R& value, std::function<R(T_ const&)> func) const noexcept {
+	R Result<T_, E_>::convert_ok_or(const R& value, std::function<R(T_ const&)> func) const {
 		if(is_ok()) {
 			return func(ok());
 		} else {
@@ -108,7 +108,7 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename R, typename... A>
-	R* Result<T_, E_>::convert_ok_or_ptr(std::function<R*(T_ const&)> func, A&& ... args) const noexcept {
+	R* Result<T_, E_>::convert_ok_or_ptr(std::function<R*(T_ const&)> func, A&& ... args) const {
 		if(is_ok()) {
 			return func(ok());
 		} else {
@@ -118,7 +118,7 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename R>
-	R Result<T_, E_>::convert_error_or(const R& value, std::function<R(E_ const&)> func) const noexcept {
+	R Result<T_, E_>::convert_error_or(const R& value, std::function<R(E_ const&)> func) const {
 		if(is_ok()) {
 			return value;
 		} else {
@@ -128,7 +128,7 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename R, typename... A>
-	R* Result<T_, E_>::convert_error_or_ptr(std::function<R*(E_ const&)> func, A&& ... args) const noexcept {
+	R* Result<T_, E_>::convert_error_or_ptr(std::function<R*(E_ const&)> func, A&& ... args) const {
 		if(is_ok()) {
 			return new R{std::forward<A>(args)...};
 		} else {

@@ -2,7 +2,7 @@
 
 namespace orl {
 	template<typename T_>
-	Option<T_>::Option(const T_& data) noexcept : data_(data) {
+	Option<T_>::Option(T_ data) noexcept : data_(std::forward<T_>(data)) {
 	}
 	
 	template<typename T_>
@@ -45,7 +45,7 @@ namespace orl {
 	
 	template<typename T_>
 	template<typename R>
-	R Option<T_>::convert_or(const R& value, std::function<R(const T_&)> func) const noexcept {
+	R Option<T_>::convert_or(const R& value, std::function<R(const T_&)> func) const {
 		if(data_.is_some()) {
 			return func(data_.some());
 		} else {
@@ -55,7 +55,7 @@ namespace orl {
 	
 	template<typename T_>
 	template<typename R, typename... A>
-	R* Option<T_>::convert_or_ptr(std::function<R*(const T_&)> func, A&& ... value_args) const noexcept {
+	R* Option<T_>::convert_or_ptr(std::function<R*(const T_&)> func, A&& ... value_args) const {
 		if(data_.is_some()) {
 			return func(data_.some());
 		} else {
@@ -120,7 +120,7 @@ namespace orl {
 	
 	namespace detail {
 		template<typename T_>
-		OptionImpl<T_>::OptionImpl(T_ const& data) noexcept : data_(data) {
+		OptionImpl<T_>::OptionImpl(T_ data) noexcept : data_(std::forward<T_>(data)) {
 		}
 		
 		template<typename T_>
@@ -143,7 +143,7 @@ namespace orl {
 		}
 		
 		template<typename T_>
-		OptionImpl<T_*>::OptionImpl(T_* const& data) noexcept : data_(data) {
+		OptionImpl<T_*>::OptionImpl(T_* data) noexcept : data_(data) {
 		}
 		
 		template<typename T_>

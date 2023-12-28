@@ -2,6 +2,18 @@
 
 #include <option_result.hpp>
 
+class NonCopyable {
+public:
+	NonCopyable(NonCopyable const&) = delete;
+	NonCopyable(NonCopyable&&) = default;
+	NonCopyable() = default;
+};
+
+TEST(Result, Error_1) {
+	NonCopyable value{};
+	auto opt{orl::Result<int, NonCopyable>::Error(std::move(value))};
+}
+
 TEST(Result, Error_1_error) {
 	auto res{orl::Result<int, int>::Error(15)};
 	

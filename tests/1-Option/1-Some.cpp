@@ -2,6 +2,18 @@
 
 #include <option_result.hpp>
 
+class NonCopyable {
+public:
+	NonCopyable(NonCopyable const&) = delete;
+	NonCopyable(NonCopyable&&) = default;
+	NonCopyable() = default;
+};
+
+TEST(Option, Some_0) {
+	NonCopyable value{};
+	orl::Option<NonCopyable> opt{std::move(value)};
+}
+
 TEST(Option, Some_1_some) {
 	orl::Option<int> opt{7};
 	

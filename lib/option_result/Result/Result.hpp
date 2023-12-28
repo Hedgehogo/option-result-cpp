@@ -11,12 +11,12 @@ namespace orl {
 	template<typename T_, typename E_>
 	class Result {
 	protected:
-		using Data = std::variant<ref<T_>, ref<E_>>;
+		using Data = std::variant<ref<T_>, ref<E_> >;
 	
 	public:
-		static Result<T_, E_> Ok(T_ const& value) noexcept;
+		static Result<T_, E_> Ok(T_ value) noexcept;
 		
-		static Result<T_, E_> Error(E_ const& value) noexcept;
+		static Result<T_, E_> Error(E_ value) noexcept;
 		
 		bool is_ok() const noexcept;
 		
@@ -43,16 +43,16 @@ namespace orl {
 		Option<const E_&> error_or_none() const noexcept;
 		
 		template<typename R>
-		R convert_ok_or(const R& value, std::function<R(T_ const&)> func) const noexcept;
+		R convert_ok_or(const R& value, std::function<R(T_ const&)> func) const;
 		
 		template<typename R, typename... A>
-		R* convert_ok_or_ptr(std::function<R*(T_ const&)> func, A&& ... args) const noexcept;
+		R* convert_ok_or_ptr(std::function<R*(T_ const&)> func, A&& ... args) const;
 		
 		template<typename R>
-		R convert_error_or(const R& value, std::function<R(E_ const&)> func) const noexcept;
+		R convert_error_or(const R& value, std::function<R(E_ const&)> func) const;
 		
 		template<typename R, typename... A>
-		R* convert_error_or_ptr(std::function<R*(E_ const&)> func, A&& ... args) const noexcept;
+		R* convert_error_or_ptr(std::function<R*(E_ const&)> func, A&& ... args) const;
 		
 		T_ const& except() const;
 		
