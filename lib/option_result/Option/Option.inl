@@ -15,13 +15,18 @@ namespace orl {
 	}
 	
 	template<typename T_>
+	T_ const& Option<T_>::some() const noexcept {
+		return data_.some();
+	}
+	
+	template<typename T_>
 	T_& Option<T_>::some() noexcept {
 		return data_.some();
 	}
 	
 	template<typename T_>
-	T_ const& Option<T_>::some() const noexcept {
-		return data_.some();
+	T_ Option<T_>::move_some() noexcept {
+		return std::move(data_.some());
 	}
 	
 	template<typename T_>
@@ -30,6 +35,15 @@ namespace orl {
 			return data_.some();
 		} else {
 			return value;
+		}
+	}
+	
+	template<typename T_>
+	T_ Option<T_>::move_some_or(T_&& value) noexcept {
+		if(data_.is_some()) {
+			return std::move(data_.some());
+		} else {
+			return std::move(value);
 		}
 	}
 	
@@ -99,6 +113,15 @@ namespace orl {
 			orl::except(exception);
 		}
 		return data_.some();
+	}
+	
+	template<typename T_>
+	template<typename E>
+	T_ Option<T_>::move_except(const E& exception) {
+		if(!data_.is_some()) {
+			orl::except(exception);
+		}
+		return std::move(data_.some());
 	}
 	
 	template<typename T_>

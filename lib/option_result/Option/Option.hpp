@@ -23,11 +23,15 @@ namespace orl {
 		
 		bool is_some() const noexcept;
 		
-		T_& some() noexcept;
-		
 		T_ const& some() const noexcept;
 		
+		T_& some() noexcept;
+		
+		T_ move_some() noexcept;
+		
 		const T_& some_or(const T_& value) const noexcept;
+		
+		T_ move_some_or(T_&& value) noexcept;
 		
 		template<typename R = std::remove_pointer_t<T_>, typename... A>
 		R* some_or_ptr(A&& ... args) const noexcept;
@@ -49,6 +53,9 @@ namespace orl {
 		
 		template<typename E = std::runtime_error>
 		T_& except(const E& exception = std::runtime_error("Some was requested, but the orl::Option was None"));
+		
+		template<typename E = std::runtime_error>
+		T_ move_except(const E& exception = std::runtime_error("Some was requested, but the orl::Option was None"));
 		
 		std::optional<T_> optional() const noexcept;
 		

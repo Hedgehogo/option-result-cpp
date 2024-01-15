@@ -20,11 +20,15 @@ namespace orl {
 		
 		bool is_ok() const noexcept;
 		
-		T_& ok() noexcept;
-		
 		T_ const& ok() const noexcept;
 		
+		T_& ok() noexcept;
+		
+		T_ move_ok() noexcept;
+		
 		T_ const& ok_or(T_ const& value) const noexcept;
+		
+		T_ move_ok_or(T_&& value) noexcept;
 		
 		template<typename R = std::remove_pointer_t<T_>, typename... A>
 		R* ok_or_ptr(A&& ... args) const noexcept;
@@ -35,7 +39,11 @@ namespace orl {
 		
 		E_ const& error() const noexcept;
 		
+		E_ move_error() noexcept;
+		
 		E_ const& error_or(E_ const& value) const noexcept;
+		
+		E_ move_error_or(E_&& value) noexcept;
 		
 		template<typename R = std::remove_pointer_t<E_>, typename... A>
 		R* error_or_ptr(A&& ... args) const noexcept;
@@ -57,6 +65,8 @@ namespace orl {
 		T_ const& except() const;
 		
 		T_& except();
+		
+		T_ move_except();
 		
 		operator bool() const noexcept;
 		

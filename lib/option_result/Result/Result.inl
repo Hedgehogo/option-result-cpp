@@ -21,13 +21,18 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
+	T_ const& Result<T_, E_>::ok() const noexcept {
+		return std::get<0>(data_);
+	}
+	
+	template<typename T_, typename E_>
 	T_& Result<T_, E_>::ok() noexcept {
 		return std::get<0>(data_);
 	}
 	
 	template<typename T_, typename E_>
-	T_ const& Result<T_, E_>::ok() const noexcept {
-		return std::get<0>(data_);
+	T_ Result<T_, E_>::move_ok() noexcept {
+		return std::move(std::get<0>(data_));
 	}
 	
 	template<typename T_, typename E_>
@@ -36,6 +41,15 @@ namespace orl {
 			return ok();
 		} else {
 			return value;
+		}
+	}
+	
+	template<typename T_, typename E_>
+	T_ Result<T_, E_>::move_ok_or(T_&& value) noexcept {
+		if(is_ok()) {
+			return std::move(ok());
+		} else {
+			return std::move(value);
 		}
 	}
 	
@@ -59,13 +73,18 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
+	E_ const& Result<T_, E_>::error() const noexcept {
+		return std::get<1>(data_);
+	}
+	
+	template<typename T_, typename E_>
 	E_& Result<T_, E_>::error() noexcept {
 		return std::get<1>(data_);
 	}
 	
 	template<typename T_, typename E_>
-	E_ const& Result<T_, E_>::error() const noexcept {
-		return std::get<1>(data_);
+	E_ Result<T_, E_>::move_error() noexcept {
+		return std::move(std::get<1>(data_));
 	}
 	
 	template<typename T_, typename E_>
@@ -74,6 +93,15 @@ namespace orl {
 			return value;
 		} else {
 			return error();
+		}
+	}
+	
+	template<typename T_, typename E_>
+	E_ Result<T_, E_>::move_error_or(E_&& value) noexcept {
+		if(is_ok()) {
+			return std::move(value);
+		} else {
+			return std::move(error());
 		}
 	}
 	
@@ -150,6 +178,14 @@ namespace orl {
 			orl::except(error());
 		}
 		return ok();
+	}
+	
+	template<typename T_, typename E_>
+	T_ Result<T_, E_>::move_except() {
+		if(!is_ok()) {
+			orl::except(error());
+		}
+		return std::move(ok());
 	}
 	
 	template<typename T_, typename E_>
