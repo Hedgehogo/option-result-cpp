@@ -47,6 +47,9 @@ namespace orl {
 		template<typename E = std::runtime_error>
 		const T_& except(const E& exception = std::runtime_error("Some was requested, but the orl::Option was None")) const;
 		
+		template<typename E = std::runtime_error>
+		T_& except(const E& exception = std::runtime_error("Some was requested, but the orl::Option was None"));
+		
 		std::optional<T_> optional() const noexcept;
 		
 		operator bool() const noexcept;

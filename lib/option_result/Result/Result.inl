@@ -145,6 +145,14 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
+	T_& Result<T_, E_>::except() {
+		if(!is_ok()) {
+			orl::except(error());
+		}
+		return ok();
+	}
+	
+	template<typename T_, typename E_>
 	Result<T_, E_>::operator bool() const noexcept {
 		return is_ok();
 	}

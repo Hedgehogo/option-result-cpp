@@ -56,6 +56,8 @@ namespace orl {
 		
 		T_ const& except() const;
 		
+		T_& except();
+		
 		operator bool() const noexcept;
 		
 		template<typename T, typename E>

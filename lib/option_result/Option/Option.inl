@@ -93,6 +93,15 @@ namespace orl {
 	}
 	
 	template<typename T_>
+	template<typename E>
+	T_& Option<T_>::except(const E& exception) {
+		if(!data_.is_some()) {
+			orl::except(exception);
+		}
+		return data_.some();
+	}
+	
+	template<typename T_>
 	std::optional<T_> Option<T_>::optional() const noexcept {
 		if(data_.is_some()) {
 			return std::optional<T_>{data_.some()};
