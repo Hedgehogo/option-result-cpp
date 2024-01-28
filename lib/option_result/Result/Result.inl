@@ -55,7 +55,7 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename R, typename... A>
-	R* Result<T_, E_>::ok_or_ptr(A&& ... args) const noexcept {
+	T_ Result<T_, E_>::ok_or_ptr(A&& ... args) const noexcept {
 		if(is_ok()) {
 			return ok();
 		} else {
@@ -107,7 +107,7 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename R, typename... A>
-	R* Result<T_, E_>::error_or_ptr(A&& ... args) const noexcept {
+	E_ Result<T_, E_>::error_or_ptr(A&& ... args) const noexcept {
 		if(is_ok()) {
 			return new R{std::forward<A>(args)...};
 		} else {

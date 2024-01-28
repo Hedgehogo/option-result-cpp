@@ -34,7 +34,7 @@ namespace orl {
 		T_ move_some_or(T_&& value) noexcept;
 		
 		template<typename R = std::remove_pointer_t<T_>, typename... A>
-		R* some_or_ptr(A&& ... args) const noexcept;
+		T_ some_or_ptr(A&& ... args) const noexcept;
 		
 		template<typename R>
 		R convert_or(const R& value, std::function<R(const T_&)> func) const;

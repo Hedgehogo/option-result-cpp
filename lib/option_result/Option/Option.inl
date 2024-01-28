@@ -49,7 +49,7 @@ namespace orl {
 	
 	template<typename T_>
 	template<typename R, typename... A>
-	R* Option<T_>::some_or_ptr(A&& ... args) const noexcept {
+	T_ Option<T_>::some_or_ptr(A&& ... args) const noexcept {
 		if(data_.is_some()) {
 			return data_.some();
 		} else {

@@ -31,7 +31,7 @@ namespace orl {
 		T_ move_ok_or(T_&& value) noexcept;
 		
 		template<typename R = std::remove_pointer_t<T_>, typename... A>
-		R* ok_or_ptr(A&& ... args) const noexcept;
+		T_ ok_or_ptr(A&& ... args) const noexcept;
 		
 		Option<const T_&> ok_or_none() const noexcept;
 		
@@ -46,7 +46,7 @@ namespace orl {
 		E_ move_error_or(E_&& value) noexcept;
 		
 		template<typename R = std::remove_pointer_t<E_>, typename... A>
-		R* error_or_ptr(A&& ... args) const noexcept;
+		E_ error_or_ptr(A&& ... args) const noexcept;
 		
 		Option<const E_&> error_or_none() const noexcept;
 		
