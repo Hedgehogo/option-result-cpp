@@ -9,7 +9,7 @@ public:
 	NonCopyable() = default;
 };
 
-TEST(Result, Error_1) {
+TEST(Result, Error_0) {
 	NonCopyable value{};
 	auto opt{orl::Result<int, NonCopyable>::Error(std::move(value))};
 }
@@ -32,7 +32,14 @@ TEST(Result, Error_3_ok_or) {
 	ASSERT_EQ(res.ok_or(5), 5);
 }
 
-TEST(Result, Error_4_ok_or_ptr) {
+TEST(Result, Error_4_ok_or_else) {
+	auto res{orl::Result<int, int>::Error(15)};
+	
+	int default_ok{5};
+	ASSERT_EQ(res.ok_or_else([&]() -> int& { return default_ok; }), 5);
+}
+
+TEST(Result, Error_5_ok_or_ptr) {
 	auto res{orl::Result<int*, int>::Error(15)};
 	
 	int* value{res.ok_or_ptr(5)};
@@ -41,13 +48,20 @@ TEST(Result, Error_4_ok_or_ptr) {
 	delete value;
 }
 
-TEST(Result, Error_5_error_or) {
+TEST(Result, Error_6_error_or) {
 	auto res{orl::Result<int, int>::Error(15)};
 	
 	ASSERT_EQ(res.error_or(19), 15);
 }
 
-TEST(Result, Error_6_error_or_ptr) {
+TEST(Result, Error_7_error_or_else) {
+	auto res{orl::Result<int, int>::Error(15)};
+	
+	int default_error{19};
+	ASSERT_EQ(res.error_or_else([&]() -> int& { return default_error; }), 15);
+}
+
+TEST(Result, Error_8_error_or_ptr) {
 	auto res{orl::Result<int, int*>::Error(new int{15})};
 	
 	int* value{res.error_or_ptr(19)};
@@ -56,34 +70,16 @@ TEST(Result, Error_6_error_or_ptr) {
 	delete value;
 }
 
-TEST(Result, Error_7_convert_ok_or) {
+TEST(Result, Error_9_map_ok) {
 	auto res{orl::Result<int, int>::Error(15)};
 	
-	ASSERT_EQ(res.convert_ok_or<char>('a', [](const int& some) { return char('a' + char(some)); }), 'a');
+	ASSERT_EQ(res.map_ok([](const int& ok) { return char('a' + char(ok)); }).some_or('a'), 'a');
 }
 
-TEST(Result, Error_8_convert_ok_or_ptr) {
-	auto res{orl::Result<int, int>::Error(15)};
-	int* value{res.convert_ok_or_ptr<int>([](const int& some) { return new int{some}; }, 5)};
-	
-	ASSERT_EQ(*value, 5);
-	
-	delete value;
-}
-
-TEST(Result, Error_9_convert_error_or) {
+TEST(Result, Error_10_map_error) {
 	auto res{orl::Result<int, int>::Error(15)};
 	
-	ASSERT_EQ(res.convert_error_or<char>('a', [](const int& some) { return char('a' + char(some)); }), 'p');
-}
-
-TEST(Result, Error_10_convert_error_or_ptr) {
-	auto res{orl::Result<int, int>::Error(15)};
-	int* value{res.convert_error_or_ptr<int>([](const int& some) { return new int{some}; }, 19)};
-	
-	ASSERT_EQ(*value, 15);
-	
-	delete value;
+	ASSERT_EQ(res.map_error([](const int& error) { return char('a' + char(error)); }).some_or('a'), 'p');
 }
 
 TEST(Result, Error_11_except) {

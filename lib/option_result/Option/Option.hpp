@@ -33,14 +33,22 @@ namespace orl {
 		
 		T_ move_some_or(T_&& value) noexcept;
 		
+		template<typename F>
+		std::enable_if_t<std::is_invocable_r_v<T_ const&, F>, T_ const&>
+		some_or_else(F fn) const noexcept;
+		
+		template<typename F>
+		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
+		move_some_or_else(F fn) noexcept;
+		
 		template<typename R = std::remove_pointer_t<T_>, typename... A>
 		T_ some_or_ptr(A&& ... args) const noexcept;
 		
-		template<typename R>
-		R convert_or(const R& value, std::function<R(const T_&)> func) const;
+		template<typename F>
+		Option<std::invoke_result_t<F, T_ const&> > map(F fn) const;
 		
-		template<typename R, typename... A>
-		R* convert_or_ptr(std::function<R*(const T_&)> func, A&& ... value_args) const;
+		template<typename F>
+		Option<std::invoke_result_t<F, T_&> > map(F fn);
 		
 		template<typename E>
 		Result<const T_&, E> ok_or(const E& error) const noexcept;

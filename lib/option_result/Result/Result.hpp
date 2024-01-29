@@ -30,6 +30,14 @@ namespace orl {
 		
 		T_ move_ok_or(T_&& value) noexcept;
 		
+		template<typename F>
+		std::enable_if_t<std::is_invocable_r_v<T_ const&, F>, T_ const&>
+		ok_or_else(F fn) const noexcept;
+		
+		template<typename F>
+		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
+		move_ok_or_else(F fn) noexcept;
+		
 		template<typename R = std::remove_pointer_t<T_>, typename... A>
 		T_ ok_or_ptr(A&& ... args) const noexcept;
 		
@@ -45,22 +53,30 @@ namespace orl {
 		
 		E_ move_error_or(E_&& value) noexcept;
 		
+		template<typename F>
+		std::enable_if_t<std::is_invocable_r_v<T_ const&, F>, T_ const&>
+		error_or_else(F fn) const noexcept;
+		
+		template<typename F>
+		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
+		move_error_or_else(F fn) noexcept;
+		
 		template<typename R = std::remove_pointer_t<E_>, typename... A>
 		E_ error_or_ptr(A&& ... args) const noexcept;
 		
 		Option<const E_&> error_or_none() const noexcept;
 		
-		template<typename R>
-		R convert_ok_or(const R& value, std::function<R(T_ const&)> func) const;
+		template<typename F>
+		Option<std::invoke_result_t<F, T_ const&> > map_ok(F fn) const;
 		
-		template<typename R, typename... A>
-		R* convert_ok_or_ptr(std::function<R*(T_ const&)> func, A&& ... args) const;
+		template<typename F>
+		Option<std::invoke_result_t<F, T_&> > map_ok(F fn);
 		
-		template<typename R>
-		R convert_error_or(const R& value, std::function<R(E_ const&)> func) const;
+		template<typename F>
+		Option<std::invoke_result_t<F, E_ const&> > map_error(F fn) const;
 		
-		template<typename R, typename... A>
-		R* convert_error_or_ptr(std::function<R*(E_ const&)> func, A&& ... args) const;
+		template<typename F>
+		Option<std::invoke_result_t<F, E_&> > map_error(F fn);
 		
 		T_ const& except() const;
 		

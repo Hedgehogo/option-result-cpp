@@ -32,7 +32,14 @@ TEST(Option, Some_3_some_or) {
 	ASSERT_EQ(opt.some_or(5), 7);
 }
 
-TEST(Option, Some_4_some_or_ptr) {
+TEST(Option, Some_4_some_or_else) {
+	orl::Option<int> opt{7};
+	
+	int default_some{5};
+	ASSERT_EQ(opt.some_or_else([&]() -> int& { return default_some; }), 7);
+}
+
+TEST(Option, Some_5_some_or_ptr) {
 	orl::Option<int*> opt{new int{7}};
 	
 	int* value{opt.some_or_ptr(5)};
@@ -41,19 +48,10 @@ TEST(Option, Some_4_some_or_ptr) {
 	delete value;
 }
 
-TEST(Option, Some_5_convert_or) {
+TEST(Option, Some_6_map) {
 	orl::Option<int> opt{7};
 	
-	ASSERT_EQ(opt.convert_or<char>('a', [](const int& some) { return char('a' + char(some)); }), 'h');
-}
-
-TEST(Option, Some_6_convert_or_ptr) {
-	orl::Option<int> opt{7};
-	int* value{opt.convert_or_ptr<int>([](const int& some) { return new int{some}; }, 5)};
-	
-	ASSERT_EQ(*value, 7);
-	
-	delete value;
+	ASSERT_EQ(opt.map([](const int& some){ return char('a' + char(some)); }).some_or('a'), 'h');
 }
 
 TEST(Option, Some_7_except) {

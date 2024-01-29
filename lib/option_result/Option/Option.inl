@@ -33,18 +33,34 @@ namespace orl {
 	const T_& Option<T_>::some_or(const T_& value) const noexcept {
 		if(data_.is_some()) {
 			return data_.some();
-		} else {
-			return value;
 		}
+		return value;
 	}
 	
 	template<typename T_>
 	T_ Option<T_>::move_some_or(T_&& value) noexcept {
 		if(data_.is_some()) {
 			return std::move(data_.some());
-		} else {
-			return std::move(value);
 		}
+		return std::move(value);
+	}
+	
+	template<typename T_>
+	template<typename F>
+	std::enable_if_t<std::is_invocable_r_v<T_ const&, F>, T_ const&> Option<T_>::some_or_else(F fn) const noexcept {
+		if(data_.is_some()) {
+			return data_.some();
+		}
+		return fn();
+	}
+	
+	template<typename T_>
+	template<typename F>
+	std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> Option<T_>::move_some_or_else(F fn) noexcept {
+		if(data_.is_some()) {
+			return std::move(data_.some());
+		}
+		return fn();
 	}
 	
 	template<typename T_>
@@ -52,29 +68,26 @@ namespace orl {
 	T_ Option<T_>::some_or_ptr(A&& ... args) const noexcept {
 		if(data_.is_some()) {
 			return data_.some();
-		} else {
-			return new R{std::forward<A...>(args)...};
 		}
+		return new R{std::forward<A...>(args)...};
 	}
 	
 	template<typename T_>
-	template<typename R>
-	R Option<T_>::convert_or(const R& value, std::function<R(const T_&)> func) const {
+	template<typename F>
+	Option<std::invoke_result_t<F, T_ const&> > Option<T_>::map(F fn) const {
 		if(data_.is_some()) {
-			return func(data_.some());
-		} else {
-			return value;
+			return {fn(data_.some())};
 		}
+		return {};
 	}
 	
 	template<typename T_>
-	template<typename R, typename... A>
-	R* Option<T_>::convert_or_ptr(std::function<R*(const T_&)> func, A&& ... value_args) const {
+	template<typename F>
+	Option<std::invoke_result_t<F, T_&> > Option<T_>::map(F fn) {
 		if(data_.is_some()) {
-			return func(data_.some());
-		} else {
-			return new T_{std::forward<A...>(value_args)...};
+			return {fn(data_.some())};
 		}
+		return {};
 	}
 	
 	template<typename T_>
@@ -82,9 +95,8 @@ namespace orl {
 	Result<const T_&, E> Option<T_>::ok_or(const E& error) const noexcept {
 		if(data_.is_some()) {
 			return Result<const T_&, E>::Ok(data_.some());
-		} else {
-			return Result<const T_&, E>::Error(error);
 		}
+		return Result<const T_&, E>::Error(error);
 	}
 	
 	template<typename T_>
@@ -92,9 +104,8 @@ namespace orl {
 	Result<T, const T_&> Option<T_>::error_or(const T& ok) const noexcept {
 		if(data_.is_some()) {
 			return Result<T, const T_&>::Error(data_.some());
-		} else {
-			return Result<T, const T_&>::Ok(ok);
 		}
+		return Result<T, const T_&>::Ok(ok);
 	}
 	
 	template<typename T_>
@@ -128,9 +139,8 @@ namespace orl {
 	std::optional<T_> Option<T_>::optional() const noexcept {
 		if(data_.is_some()) {
 			return std::optional<T_>{data_.some()};
-		} else {
-			return std::optional<T_>{};
 		}
+		return std::optional<T_>{};
 	}
 	
 	template<typename T_>

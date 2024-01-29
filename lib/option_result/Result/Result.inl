@@ -39,18 +39,34 @@ namespace orl {
 	T_ const& Result<T_, E_>::ok_or(T_ const& value) const noexcept {
 		if(is_ok()) {
 			return ok();
-		} else {
-			return value;
 		}
+		return value;
 	}
 	
 	template<typename T_, typename E_>
 	T_ Result<T_, E_>::move_ok_or(T_&& value) noexcept {
 		if(is_ok()) {
 			return std::move(ok());
-		} else {
-			return std::move(value);
 		}
+		return std::move(value);
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	std::enable_if_t<std::is_invocable_r_v<T_ const&, F>, T_ const&> Result<T_, E_>::ok_or_else(F fn) const noexcept {
+		if(is_ok()) {
+			return ok();
+		}
+		return fn();
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> Result<T_, E_>::move_ok_or_else(F fn) noexcept {
+		if(is_ok()) {
+			return std::move(ok());
+		}
+		return fn();
 	}
 	
 	template<typename T_, typename E_>
@@ -58,18 +74,16 @@ namespace orl {
 	T_ Result<T_, E_>::ok_or_ptr(A&& ... args) const noexcept {
 		if(is_ok()) {
 			return ok();
-		} else {
-			return new R{std::forward<A>(args)...};
 		}
+		return new R{std::forward<A>(args)...};
 	}
 	
 	template<typename T_, typename E_>
 	Option<T_ const&> Result<T_, E_>::ok_or_none() const noexcept {
 		if(is_ok()) {
 			return Option<const T_&>{ok()};
-		} else {
-			return Option<const T_&>{};
 		}
+		return Option<const T_&>{};
 	}
 	
 	template<typename T_, typename E_>
@@ -91,18 +105,34 @@ namespace orl {
 	E_ const& Result<T_, E_>::error_or(E_ const& value) const noexcept {
 		if(is_ok()) {
 			return value;
-		} else {
-			return error();
 		}
+		return error();
 	}
 	
 	template<typename T_, typename E_>
 	E_ Result<T_, E_>::move_error_or(E_&& value) noexcept {
 		if(is_ok()) {
 			return std::move(value);
-		} else {
-			return std::move(error());
 		}
+		return std::move(error());
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	std::enable_if_t<std::is_invocable_r_v<T_ const&, F>, T_ const&> Result<T_, E_>::error_or_else(F fn) const noexcept {
+		if(is_ok()) {
+			return fn();
+		}
+		return error();
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> Result<T_, E_>::move_error_or_else(F fn) noexcept {
+		if(is_ok()) {
+			return fn();
+		}
+		return std::move(error());
 	}
 	
 	template<typename T_, typename E_>
@@ -110,58 +140,52 @@ namespace orl {
 	E_ Result<T_, E_>::error_or_ptr(A&& ... args) const noexcept {
 		if(is_ok()) {
 			return new R{std::forward<A>(args)...};
-		} else {
-			return error();
 		}
+		return error();
 	}
 	
 	template<typename T_, typename E_>
 	Option<E_ const&> Result<T_, E_>::error_or_none() const noexcept {
 		if(is_ok()) {
 			return Option<const E_&>{};
-		} else {
-			return Option<const E_&>{error()};
 		}
+		return Option<const E_&>{error()};
 	}
 	
 	template<typename T_, typename E_>
-	template<typename R>
-	R Result<T_, E_>::convert_ok_or(const R& value, std::function<R(T_ const&)> func) const {
+	template<typename F>
+	Option<std::invoke_result_t<F, T_ const&> > Result<T_, E_>::map_ok(F fn) const {
 		if(is_ok()) {
-			return func(ok());
-		} else {
-			return value;
+			return {fn(ok())};
 		}
+		return {};
 	}
 	
 	template<typename T_, typename E_>
-	template<typename R, typename... A>
-	R* Result<T_, E_>::convert_ok_or_ptr(std::function<R*(T_ const&)> func, A&& ... args) const {
+	template<typename F>
+	Option<std::invoke_result_t<F, T_&> > Result<T_, E_>::map_ok(F fn) {
 		if(is_ok()) {
-			return func(ok());
-		} else {
-			return new R{std::forward<A>(args)...};
+			return {fn(ok())};
 		}
+		return {};
 	}
 	
 	template<typename T_, typename E_>
-	template<typename R>
-	R Result<T_, E_>::convert_error_or(const R& value, std::function<R(E_ const&)> func) const {
+	template<typename F>
+	Option<std::invoke_result_t<F, E_ const&> > Result<T_, E_>::map_error(F fn) const {
 		if(is_ok()) {
-			return value;
-		} else {
-			return func(error());
+			return {};
 		}
+		return {fn(error())};
 	}
 	
 	template<typename T_, typename E_>
-	template<typename R, typename... A>
-	R* Result<T_, E_>::convert_error_or_ptr(std::function<R*(E_ const&)> func, A&& ... args) const {
+	template<typename F>
+	Option<std::invoke_result_t<F, E_&> > Result<T_, E_>::map_error(F fn) {
 		if(is_ok()) {
-			return new R{std::forward<A>(args)...};
-		} else {
-			return func(error());
+			return {};
 		}
+		return {fn(error())};
 	}
 	
 	template<typename T_, typename E_>
