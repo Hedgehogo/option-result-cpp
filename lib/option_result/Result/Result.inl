@@ -6,37 +6,42 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	Result<T_, E_> Result<T_, E_>::Ok(T_ value) noexcept {
+	auto Result<T_, E_>::Ok(T_ value) noexcept -> Result<T_, E_> {
 		return Result<T_, E_>(Data{std::in_place_index<0>, std::forward<T_>(value)});
 	}
 	
 	template<typename T_, typename E_>
-	Result<T_, E_> Result<T_, E_>::Error(E_ value) noexcept {
+	auto Result<T_, E_>::Error(E_ value) noexcept -> Result<T_, E_> {
 		return Result<T_, E_>(Data{std::in_place_index<1>, std::forward<E_>(value)});
 	}
 	
 	template<typename T_, typename E_>
-	bool Result<T_, E_>::is_ok() const noexcept {
+	auto Result<T_, E_>::is_ok() const noexcept -> bool {
 		return data_.index() == 0;
 	}
 	
 	template<typename T_, typename E_>
-	T_ const& Result<T_, E_>::ok() const noexcept {
+	auto Result<T_, E_>::ok() const& noexcept -> T_ const& {
 		return std::get<0>(data_);
 	}
 	
 	template<typename T_, typename E_>
-	T_& Result<T_, E_>::ok() noexcept {
+	auto Result<T_, E_>::ok()& noexcept -> T_& {
 		return std::get<0>(data_);
 	}
 	
 	template<typename T_, typename E_>
-	T_ Result<T_, E_>::move_ok() noexcept {
+	auto Result<T_, E_>::ok()&& noexcept -> T_ {
 		return std::move(std::get<0>(data_));
 	}
 	
 	template<typename T_, typename E_>
-	T_ const& Result<T_, E_>::ok_or(T_ const& value) const noexcept {
+	auto Result<T_, E_>::move_ok() noexcept -> T_ {
+		return std::move(std::get<0>(data_));
+	}
+	
+	template<typename T_, typename E_>
+	auto Result<T_, E_>::ok_or(T_ const& value) const& noexcept -> T_ {
 		if(is_ok()) {
 			return ok();
 		}
@@ -44,7 +49,23 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	T_ Result<T_, E_>::move_ok_or(T_&& value) noexcept {
+	auto Result<T_, E_>::ok_or(T_& value)& noexcept -> T_& {
+		if(is_ok()) {
+			return ok();
+		}
+		return value;
+	}
+	
+	template<typename T_, typename E_>
+	auto Result<T_, E_>::ok_or(T_&& value)&& noexcept -> T_ {
+		if(is_ok()) {
+			return std::move(ok());
+		}
+		return std::move(value);
+	}
+	
+	template<typename T_, typename E_>
+	auto Result<T_, E_>::move_ok_or(T_&& value) noexcept -> T_ {
 		if(is_ok()) {
 			return std::move(ok());
 		}
@@ -53,7 +74,7 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename F>
-	std::enable_if_t<std::is_invocable_r_v<T_ const&, F>, T_ const&> Result<T_, E_>::ok_or_else(F fn) const noexcept {
+	auto Result<T_, E_>::ok_or_else(F fn) const& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
 		if(is_ok()) {
 			return ok();
 		}
@@ -62,7 +83,25 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename F>
-	std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> Result<T_, E_>::move_ok_or_else(F fn) noexcept {
+	auto Result<T_, E_>::ok_or_else(F fn)& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_&, F>, T_&> {
+		if(is_ok()) {
+			return ok();
+		}
+		return fn();
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::ok_or_else(F fn)&& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
+		if(is_ok()) {
+			return std::move(ok());
+		}
+		return fn();
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::move_ok_or_else(F fn) noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
 		if(is_ok()) {
 			return std::move(ok());
 		}
@@ -71,7 +110,7 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename R, typename... A>
-	T_ Result<T_, E_>::ok_or_ptr(A&& ... args) const noexcept {
+	auto Result<T_, E_>::ok_or_ptr(A&& ... args) const noexcept -> T_ {
 		if(is_ok()) {
 			return ok();
 		}
@@ -79,7 +118,7 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	Option<T_ const&> Result<T_, E_>::ok_or_none() const noexcept {
+	auto Result<T_, E_>::ok_or_none() const& noexcept -> Option<T_ const&> {
 		if(is_ok()) {
 			return Option<const T_&>{ok()};
 		}
@@ -87,22 +126,70 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	E_ const& Result<T_, E_>::error() const noexcept {
+	auto Result<T_, E_>::ok_or_none()& noexcept -> Option<T_&> {
+		if(is_ok()) {
+			return Option<T_&>{ok()};
+		}
+		return Option<T_&>{};
+	}
+	
+	template<typename T_, typename E_>
+	auto Result<T_, E_>::ok_or_none()&& noexcept -> Option<T_> {
+		if(is_ok()) {
+			return Option<T_>{std::move(ok())};
+		}
+		return Option<T_>{};
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::map_ok(F fn) const& -> Option<std::invoke_result_t<F, T_ const&> > {
+		if(is_ok()) {
+			return {fn(ok())};
+		}
+		return {};
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::map_ok(F fn)& -> Option<std::invoke_result_t<F, T_&> > {
+		if(is_ok()) {
+			return {fn(ok())};
+		}
+		return {};
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::map_ok(F fn)&& -> Option<std::invoke_result_t<F, T_> > {
+		if(is_ok()) {
+			return {fn(std::move(ok()))};
+		}
+		return {};
+	}
+	
+	template<typename T_, typename E_>
+	auto Result<T_, E_>::error() const& noexcept -> E_ const& {
 		return std::get<1>(data_);
 	}
 	
 	template<typename T_, typename E_>
-	E_& Result<T_, E_>::error() noexcept {
+	auto Result<T_, E_>::error()& noexcept -> E_& {
 		return std::get<1>(data_);
 	}
 	
 	template<typename T_, typename E_>
-	E_ Result<T_, E_>::move_error() noexcept {
+	auto Result<T_, E_>::error()&& noexcept -> E_ {
 		return std::move(std::get<1>(data_));
 	}
 	
 	template<typename T_, typename E_>
-	E_ const& Result<T_, E_>::error_or(E_ const& value) const noexcept {
+	auto Result<T_, E_>::move_error() noexcept -> E_ {
+		return std::move(std::get<1>(data_));
+	}
+	
+	template<typename T_, typename E_>
+	auto Result<T_, E_>::error_or(E_ const& value) const& noexcept -> E_ {
 		if(is_ok()) {
 			return value;
 		}
@@ -110,7 +197,23 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	E_ Result<T_, E_>::move_error_or(E_&& value) noexcept {
+	auto Result<T_, E_>::error_or(E_& value)& noexcept -> E_& {
+		if(is_ok()) {
+			return value;
+		}
+		return error();
+	}
+	
+	template<typename T_, typename E_>
+	auto Result<T_, E_>::error_or(E_&& value)&& noexcept -> E_ {
+		if(is_ok()) {
+			return value;
+		}
+		return error();
+	}
+	
+	template<typename T_, typename E_>
+	auto Result<T_, E_>::move_error_or(E_&& value) noexcept -> E_ {
 		if(is_ok()) {
 			return std::move(value);
 		}
@@ -119,7 +222,7 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename F>
-	std::enable_if_t<std::is_invocable_r_v<T_ const&, F>, T_ const&> Result<T_, E_>::error_or_else(F fn) const noexcept {
+	auto Result<T_, E_>::error_or_else(F fn) const& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
 		if(is_ok()) {
 			return fn();
 		}
@@ -128,7 +231,25 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename F>
-	std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> Result<T_, E_>::move_error_or_else(F fn) noexcept {
+	auto Result<T_, E_>::error_or_else(F fn)& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_&, F>, T_&> {
+		if(is_ok()) {
+			return fn();
+		}
+		return error();
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::error_or_else(F fn)&& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
+		if(is_ok()) {
+			return fn();
+		}
+		return std::move(error());
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::move_error_or_else(F fn) noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
 		if(is_ok()) {
 			return fn();
 		}
@@ -137,7 +258,7 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename R, typename... A>
-	E_ Result<T_, E_>::error_or_ptr(A&& ... args) const noexcept {
+	auto Result<T_, E_>::error_or_ptr(A&& ... args) const noexcept -> E_ {
 		if(is_ok()) {
 			return new R{std::forward<A>(args)...};
 		}
@@ -145,7 +266,7 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	Option<E_ const&> Result<T_, E_>::error_or_none() const noexcept {
+	auto Result<T_, E_>::error_or_none() const& noexcept -> Option<E_ const&> {
 		if(is_ok()) {
 			return Option<const E_&>{};
 		}
@@ -153,26 +274,24 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	template<typename F>
-	Option<std::invoke_result_t<F, T_ const&> > Result<T_, E_>::map_ok(F fn) const {
+	auto Result<T_, E_>::error_or_none()& noexcept -> Option<E_&> {
 		if(is_ok()) {
-			return {fn(ok())};
+			return Option<E_&>{};
 		}
-		return {};
+		return Option<E_&>{error()};
+	}
+	
+	template<typename T_, typename E_>
+	auto Result<T_, E_>::error_or_none()&& noexcept -> Option<E_> {
+		if(is_ok()) {
+			return Option<E_>{};
+		}
+		return Option<E_>{std::move(error())};
 	}
 	
 	template<typename T_, typename E_>
 	template<typename F>
-	Option<std::invoke_result_t<F, T_&> > Result<T_, E_>::map_ok(F fn) {
-		if(is_ok()) {
-			return {fn(ok())};
-		}
-		return {};
-	}
-	
-	template<typename T_, typename E_>
-	template<typename F>
-	Option<std::invoke_result_t<F, E_ const&> > Result<T_, E_>::map_error(F fn) const {
+	auto Result<T_, E_>::map_error(F fn) const& -> Option<std::invoke_result_t<F, E_ const&> > {
 		if(is_ok()) {
 			return {};
 		}
@@ -181,7 +300,7 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename F>
-	Option<std::invoke_result_t<F, E_&> > Result<T_, E_>::map_error(F fn) {
+	auto Result<T_, E_>::map_error(F fn)& -> Option<std::invoke_result_t<F, E_&> > {
 		if(is_ok()) {
 			return {};
 		}
@@ -189,7 +308,16 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	T_ const& Result<T_, E_>::except() const {
+	template<typename F>
+	auto Result<T_, E_>::map_error(F fn)&& -> Option<std::invoke_result_t<F, E_> > {
+		if(is_ok()) {
+			return {};
+		}
+		return {fn(std::move(error()))};
+	}
+	
+	template<typename T_, typename E_>
+	auto Result<T_, E_>::except() const& -> T_ const& {
 		if(!is_ok()) {
 			orl::except(error());
 		}
@@ -197,7 +325,7 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	T_& Result<T_, E_>::except() {
+	auto Result<T_, E_>::except()& -> T_& {
 		if(!is_ok()) {
 			orl::except(error());
 		}
@@ -205,7 +333,15 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	T_ Result<T_, E_>::move_except() {
+	auto Result<T_, E_>::except()&& -> T_ {
+		if(!is_ok()) {
+			orl::except(error());
+		}
+		return std::move(ok());
+	}
+	
+	template<typename T_, typename E_>
+	auto Result<T_, E_>::move_except() -> T_ {
 		if(!is_ok()) {
 			orl::except(error());
 		}
@@ -219,7 +355,7 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename T, typename E>
-	bool Result<T_, E_>::operator==(Result<T, E> const& other) const noexcept {
+	auto Result<T_, E_>::operator==(Result<T, E> const& other) const noexcept -> bool {
 		if(is_ok() == other.is_ok()) {
 			if(is_ok()) {
 				return ok() == other.ok();

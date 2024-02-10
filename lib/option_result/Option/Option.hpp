@@ -23,19 +23,33 @@ namespace orl {
 		
 		bool is_some() const noexcept;
 		
-		T_ const& some() const noexcept;
+		T_ const& some() const& noexcept;
 		
-		T_& some() noexcept;
+		T_& some()& noexcept;
+		
+		T_ some()&& noexcept;
 		
 		T_ move_some() noexcept;
 		
-		const T_& some_or(const T_& value) const noexcept;
+		T_ some_or(T_ const& value) const& noexcept;
+		
+		T_& some_or(T_& value)& noexcept;
+		
+		T_ some_or(T_&& value)&& noexcept;
 		
 		T_ move_some_or(T_&& value) noexcept;
 		
 		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_ const&, F>, T_ const&>
-		some_or_else(F fn) const noexcept;
+		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
+		some_or_else(F fn) const& noexcept;
+		
+		template<typename F>
+		std::enable_if_t<std::is_invocable_r_v<T_&, F>, T_&>
+		some_or_else(F fn)& noexcept;
+		
+		template<typename F>
+		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
+		some_or_else(F fn)&& noexcept;
 		
 		template<typename F>
 		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
@@ -45,33 +59,55 @@ namespace orl {
 		T_ some_or_ptr(A&& ... args) const noexcept;
 		
 		template<typename F>
-		Option<std::invoke_result_t<F, T_ const&> > map(F fn) const;
+		Option<std::invoke_result_t<F, T_ const&> > map(F fn) const&;
 		
 		template<typename F>
-		Option<std::invoke_result_t<F, T_&> > map(F fn);
+		Option<std::invoke_result_t<F, T_&> > map(F fn)&;
+		
+		template<typename F>
+		Option<std::invoke_result_t<F, T_> > map(F fn)&&;
 		
 		template<typename E>
-		Result<const T_&, E> ok_or(const E& error) const noexcept;
+		Result<T_ const&, E> ok_or(E error) const& noexcept;
+		
+		template<typename E>
+		Result<T_&, E> ok_or(E error)& noexcept;
+		
+		template<typename E>
+		Result<T_, E> ok_or(E error)&& noexcept;
 		
 		template<typename T>
-		Result<T, const T_&> error_or(const T& ok) const noexcept;
+		Result<T, T_ const&> error_or(T ok) const& noexcept;
+		
+		template<typename T>
+		Result<T, T_&> error_or(T ok)& noexcept;
+		
+		template<typename T>
+		Result<T, T_> error_or(T ok)&& noexcept;
 		
 		template<typename E = std::runtime_error>
-		const T_& except(const E& exception = std::runtime_error("Some was requested, but the orl::Option was None")) const;
+		T_ const& except(E const& exception = std::runtime_error("Some was requested, but the orl::Option was None")) const&;
 		
 		template<typename E = std::runtime_error>
-		T_& except(const E& exception = std::runtime_error("Some was requested, but the orl::Option was None"));
+		T_& except(E const& exception = std::runtime_error("Some was requested, but the orl::Option was None"))&;
+		
+		template<typename E = std::runtime_error>
+		T_ except(E const& exception = std::runtime_error("Some was requested, but the orl::Option was None"))&&;
 		
 		template<typename E = std::runtime_error>
 		T_ move_except(const E& exception = std::runtime_error("Some was requested, but the orl::Option was None"));
 		
-		std::optional<T_> optional() const noexcept;
+		std::optional<ref<T_ const&> > optional() const& noexcept;
+		
+		std::optional<ref<T_&> > optional()& noexcept;
+		
+		std::optional<T_> optional()&& noexcept;
 		
 		operator bool() const noexcept;
 		
 		template<typename T>
-		bool operator ==(Option<T> const& other) const noexcept;
-		
+		bool operator==(Option<T> const& other) const noexcept;
+	
 	private:
 		detail::OptionImpl<T_> data_;
 	};
@@ -106,9 +142,9 @@ namespace orl {
 			
 			bool is_some() const noexcept;
 			
-			T_*& some() noexcept;
-			
 			T_* const& some() const noexcept;
+			
+			T_*& some() noexcept;
 		};
 	}
 }

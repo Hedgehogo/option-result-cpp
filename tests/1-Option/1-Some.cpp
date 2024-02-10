@@ -5,70 +5,156 @@
 class NonCopyable {
 public:
 	NonCopyable(NonCopyable const&) = delete;
+	
 	NonCopyable(NonCopyable&&) = default;
+	
 	NonCopyable() = default;
 };
 
 TEST(Option, Some_0) {
-	NonCopyable value{};
-	orl::Option<NonCopyable> opt{std::move(value)};
+	auto value{NonCopyable{}};
+	auto opt{orl::Option<NonCopyable>{std::move(value)}};
 }
 
 TEST(Option, Some_1_some) {
-	orl::Option<int> opt{7};
-	
-	ASSERT_EQ(opt.some(), 7);
+	{
+		const auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(&opt.some(), &opt.except());
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(&opt.some(), &opt.except());
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(std::move(opt).some(), 7);
+	}
 }
 
 TEST(Option, Some_2_is_some) {
-	orl::Option<int> opt{7};
+	auto opt{orl::Option<int>{7}};
 	
 	ASSERT_TRUE(opt.is_some());
 }
 
 TEST(Option, Some_3_some_or) {
-	orl::Option<int> opt{7};
-	
-	ASSERT_EQ(opt.some_or(5), 7);
+	{
+		const auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(opt.some_or(5), 7);
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		auto default_some{5};
+		
+		ASSERT_EQ(&opt.some_or(default_some), &opt.except());
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(std::move(opt).some_or(5), 7);
+	}
 }
 
 TEST(Option, Some_4_some_or_else) {
-	orl::Option<int> opt{7};
-	
-	int default_some{5};
-	ASSERT_EQ(opt.some_or_else([&]() -> int& { return default_some; }), 7);
+	{
+		const auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(opt.some_or_else([]() -> int {
+			return 5;
+		}), 7);
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		auto default_some{5};
+		
+		ASSERT_EQ(&opt.some_or_else([&]() -> int& {
+			return default_some;
+		}), &opt.except());
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(std::move(opt).some_or_else([]() -> int {
+			return 5;
+		}), 7);
+	}
 }
 
 TEST(Option, Some_5_some_or_ptr) {
-	orl::Option<int*> opt{new int{7}};
+	auto opt{orl::Option<int*>{new int{7}}};
 	
-	int* value{opt.some_or_ptr(5)};
+	auto value{opt.some_or_ptr(5)};
 	ASSERT_EQ(*value, 7);
 	
 	delete value;
 }
 
 TEST(Option, Some_6_map) {
-	orl::Option<int> opt{7};
-	
-	ASSERT_EQ(opt.map([](const int& some){ return char('a' + char(some)); }).some_or('a'), 'h');
+	{
+		const auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(opt.map([](int const& some) {
+			return char('a' + char(some));
+		}).some_or('a'), 'h');
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(opt.map([](int& some) {
+			return char('a' + char(some));
+		}).some_or('a'), 'h');
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(opt.map([](int some) {
+			return char('a' + char(some));
+		}).some_or('a'), 'h');
+	}
 }
 
 TEST(Option, Some_7_except) {
-	orl::Option<int> opt{7};
-	
-	ASSERT_NO_THROW(opt.except(std::runtime_error("")));
-	ASSERT_EQ(opt.except(std::runtime_error("")), 7);
+	{
+		const auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(opt.except(std::runtime_error("")), 7);
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(opt.except(std::runtime_error("")), 7);
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(std::move(opt).except(std::runtime_error("")), 7);
+	}
 }
 
 TEST(Option, Some_8_optional) {
-	orl::Option<int> opt{7};
-	
-	ASSERT_EQ(opt.optional(), std::optional<int>{7});
+	{
+		const auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(opt.optional(), std::optional<orl::ref<int const&> >{opt.except()});
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(opt.optional(), std::optional<orl::ref<int&> >{opt.except()});
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		
+		ASSERT_EQ(std::move(opt).optional(), std::optional<int>{7});
+	}
 }
 
 TEST(Option, Some_9_operator_bool) {
-	orl::Option<int> opt{7};
+	auto opt{orl::Option<int>{7}};
 	
 	ASSERT_TRUE(opt);
 }
