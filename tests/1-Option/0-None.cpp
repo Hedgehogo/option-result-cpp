@@ -151,3 +151,89 @@ TEST(Option, None_9_operator_bool) {
 	
 	ASSERT_FALSE(opt);
 }
+
+TEST(Option, None_10_operator_and) {
+	{
+		{
+			const auto first_opt{orl::Option<int>{}};
+			const auto second_opt{orl::Option<int>{}};
+			
+			ASSERT_EQ(first_opt && second_opt, (orl::Option<std::tuple<int const&, int const&> >{}));
+		}
+		{
+			auto first_opt{orl::Option<int>{}};
+			auto second_opt{orl::Option<int>{}};
+			
+			ASSERT_EQ(first_opt && second_opt, (orl::Option<std::tuple<int&, int&> >{}));
+		}
+		{
+			auto first_opt{orl::Option<int>{}};
+			auto second_opt{orl::Option<int>{}};
+			
+			ASSERT_EQ(std::move(first_opt) && std::move(second_opt), (orl::Option<std::tuple<int, int> >{}));
+		}
+	}
+	{
+		{
+			const auto first_opt{orl::Option<int>{}};
+			const auto second_opt{orl::Option<int>{9}};
+			
+			ASSERT_EQ(first_opt && second_opt, (orl::Option<std::tuple<int const&, int const&> >{}));
+		}
+		{
+			auto first_opt{orl::Option<int>{}};
+			auto second_opt{orl::Option<int>{9}};
+			
+			ASSERT_EQ(first_opt && second_opt, (orl::Option<std::tuple<int&, int&> >{}));
+		}
+		{
+			auto first_opt{orl::Option<int>{}};
+			auto second_opt{orl::Option<int>{9}};
+			
+			ASSERT_EQ(std::move(first_opt) && std::move(second_opt), (orl::Option<std::tuple<int, int> >{}));
+		}
+	}
+}
+
+TEST(Option, None_11_operator_or) {
+	{
+		{
+			const auto first_opt{orl::Option<int>{}};
+			const auto second_opt{orl::Option<int>{}};
+			
+			ASSERT_EQ(first_opt || second_opt, orl::Option<int const&>{});
+		}
+		{
+			auto first_opt{orl::Option<int>{}};
+			auto second_opt{orl::Option<int>{}};
+			
+			ASSERT_EQ(first_opt || second_opt, orl::Option<int&>{});
+		}
+		{
+			auto first_opt{orl::Option<int>{}};
+			auto second_opt{orl::Option<int>{}};
+			
+			ASSERT_EQ(std::move(first_opt) || std::move(second_opt), orl::Option<int>{});
+		}
+	}
+	{
+		{
+			const auto first_opt{orl::Option<int>{}};
+			const auto second_opt{orl::Option<int>{9}};
+			
+			ASSERT_EQ(first_opt || second_opt, orl::Option<int const&>{second_opt.except()});
+		}
+		{
+			auto first_opt{orl::Option<int>{}};
+			auto second_opt{orl::Option<int>{9}};
+			
+			ASSERT_EQ(first_opt || second_opt, orl::Option<int&>{second_opt.except()});
+		}
+		{
+			auto first_opt{orl::Option<int>{}};
+			auto second_opt{orl::Option<int>{9}};
+			
+			ASSERT_EQ(std::move(first_opt) || std::move(second_opt), orl::Option<int>{9});
+		}
+	}
+}

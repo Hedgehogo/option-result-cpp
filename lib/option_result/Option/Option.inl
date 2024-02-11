@@ -254,7 +254,7 @@ namespace orl {
 	
 	template<typename T_>
 	template<typename T>
-	auto Option<T_>::operator==(const Option<T>& other) const noexcept -> bool {
+	auto Option<T_>::operator==(Option<T> const& other) const noexcept -> bool {
 		if(data_.is_some()) {
 			if(other.is_some()) {
 				return data_.some() == other.some();
@@ -262,6 +262,66 @@ namespace orl {
 			return false;
 		}
 		return !other.is_some();
+	}
+	
+	template<typename T_>
+	template<typename T>
+	Option<std::tuple<T_ const&, T const&> > Option<T_>::operator&&(Option<T> const& other) const& noexcept {
+		if(data_.is_some() && other.is_some()) {
+			return {{data_.some(), other.some()}};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	template<typename T>
+	Option<std::tuple<T_&, T&> > Option<T_>::operator&&(Option<T>& other)& noexcept {
+		if(data_.is_some() && other.is_some()) {
+			return {{data_.some(), other.some()}};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	template<typename T>
+	Option<std::tuple<T_, T> > Option<T_>::operator&&(Option<T>&& other)&& noexcept {
+		if(data_.is_some() && other.is_some()) {
+			return {{std::forward<T_>(data_.some()), std::move(other).some()}};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	Option<T_ const&> Option<T_>::operator||(Option<T_> const& other) const& noexcept {
+		if(data_.is_some()) {
+			return {data_.some()};
+		}
+		if(other.is_some()) {
+			return {other.some()};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	Option<T_&> Option<T_>::operator||(Option<T_>& other)& noexcept {
+		if(data_.is_some()) {
+			return {data_.some()};
+		}
+		if(other.is_some()) {
+			return {other.some()};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	Option<T_> Option<T_>::operator||(Option<T_>&& other)&& noexcept {
+		if(data_.is_some()) {
+			return {std::forward<T_>(data_.some())};
+		}
+		if(other.is_some()) {
+			return {std::move(other).some()};
+		}
+		return {};
 	}
 	
 	namespace detail {

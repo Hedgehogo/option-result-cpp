@@ -107,6 +107,21 @@ namespace orl {
 		
 		template<typename T>
 		bool operator==(Option<T> const& other) const noexcept;
+		
+		template<typename T>
+		Option<std::tuple<T_ const&, T const&> > operator&&(Option<T> const& other) const& noexcept;
+		
+		template<typename T>
+		Option<std::tuple<T_&, T&> > operator&&(Option<T>& other)& noexcept;
+		
+		template<typename T>
+		Option<std::tuple<T_, T> > operator&&(Option<T>&& other)&& noexcept;
+		
+		Option<T_ const&> operator||(Option<T_> const& other) const& noexcept;
+		
+		Option<T_&> operator||(Option<T_>& other)& noexcept;
+		
+		Option<T_> operator||(Option<T_>&& other)&& noexcept;
 	
 	private:
 		detail::OptionImpl<T_> data_;
