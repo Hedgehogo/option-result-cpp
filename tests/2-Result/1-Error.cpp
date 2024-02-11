@@ -93,7 +93,31 @@ TEST(Result, Error_5_ok_or_ptr) {
 	delete value;
 }
 
-TEST(Result, Error_6_error_or) {
+TEST(Result, Error_6_map_ok) {
+	{
+		const auto res{orl::Result<int, int>::Error(15)};
+		
+		ASSERT_EQ(res.map_ok([](int const& ok) {
+			return char('a' + char(ok));
+		}).ok_or('a'), 'a');
+	}
+	{
+		auto res{orl::Result<int, int>::Error(15)};
+		
+		ASSERT_EQ(res.map_ok([](int& ok) {
+			return char('a' + char(ok));
+		}).ok_or('a'), 'a');
+	}
+	{
+		auto res{orl::Result<int, int>::Error(15)};
+		
+		ASSERT_EQ(std::move(res).map_ok([](int ok) {
+			return char('a' + char(ok));
+		}).ok_or('a'), 'a');
+	}
+}
+
+TEST(Result, Error_7_error_or) {
 	{
 		const auto res{orl::Result<int, int>::Error(15)};
 		
@@ -112,7 +136,7 @@ TEST(Result, Error_6_error_or) {
 	}
 }
 
-TEST(Result, Error_7_error_or_else) {
+TEST(Result, Error_8_error_or_else) {
 	{
 		const auto res{orl::Result<int, int>::Error(15)};
 		
@@ -137,7 +161,7 @@ TEST(Result, Error_7_error_or_else) {
 	}
 }
 
-TEST(Result, Error_8_error_or_ptr) {
+TEST(Result, Error_9_error_or_ptr) {
 	auto res{orl::Result<int, int*>::Error(new int{15})};
 	
 	auto value{res.error_or_ptr(19)};
@@ -146,51 +170,27 @@ TEST(Result, Error_8_error_or_ptr) {
 	delete value;
 }
 
-TEST(Result, Error_9_map_ok) {
-	{
-		const auto res{orl::Result<int, int>::Error(15)};
-		
-		ASSERT_EQ(res.map_ok([](int const& ok) {
-			return char('a' + char(ok));
-		}).some_or('a'), 'a');
-	}
-	{
-		auto res{orl::Result<int, int>::Error(15)};
-		
-		ASSERT_EQ(res.map_ok([](int& ok) {
-			return char('a' + char(ok));
-		}).some_or('a'), 'a');
-	}
-	{
-		auto res{orl::Result<int, int>::Error(15)};
-		
-		ASSERT_EQ(std::move(res).map_ok([](int ok) {
-			return char('a' + char(ok));
-		}).some_or('a'), 'a');
-	}
-}
-
 TEST(Result, Error_10_map_error) {
 	{
 		const auto res{orl::Result<int, int>::Error(15)};
 		
 		ASSERT_EQ(res.map_error([](int const& error) {
 			return char('a' + char(error));
-		}).some_or('a'), 'p');
+		}).error_or('a'), 'p');
 	}
 	{
 		auto res{orl::Result<int, int>::Error(15)};
 		
 		ASSERT_EQ(res.map_error([](int& error) {
 			return char('a' + char(error));
-		}).some_or('a'), 'p');
+		}).error_or('a'), 'p');
 	}
 	{
 		auto res{orl::Result<int, int>::Error(15)};
 		
 		ASSERT_EQ(std::move(res).map_error([](int error) {
 			return char('a' + char(error));
-		}).some_or('a'), 'p');
+		}).error_or('a'), 'p');
 	}
 }
 

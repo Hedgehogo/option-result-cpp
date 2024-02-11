@@ -99,21 +99,21 @@ TEST(Result, Ok_6_map_ok) {
 		
 		ASSERT_EQ(res.map_ok([](int const& ok) {
 			return char('a' + char(ok));
-		}).some_or('a'), 'h');
+		}).ok_or('a'), 'h');
 	}
 	{
 		auto res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(res.map_ok([](int& ok) {
 			return char('a' + char(ok));
-		}).some_or('a'), 'h');
+		}).ok_or('a'), 'h');
 	}
 	{
 		auto res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(std::move(res).map_ok([](int&& ok) {
 			return char('a' + char(ok));
-		}).some_or('a'), 'h');
+		}).ok_or('a'), 'h');
 	}
 }
 
@@ -176,21 +176,21 @@ TEST(Result, Ok_10_map_error) {
 		
 		ASSERT_EQ(res.map_error([](int const& error) {
 			return char('a' + char(error));
-		}).some_or('a'), 'a');
+		}).error_or('a'), 'a');
 	}
 	{
 		auto res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(res.map_error([](int& error) {
 			return char('a' + char(error));
-		}).some_or('a'), 'a');
+		}).error_or('a'), 'a');
 	}
 	{
 		auto res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(std::move(res).map_error([](int&& error) {
 			return char('a' + char(error));
-		}).some_or('a'), 'a');
+		}).error_or('a'), 'a');
 	}
 }
 

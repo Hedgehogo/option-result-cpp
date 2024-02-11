@@ -143,29 +143,32 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename F>
-	auto Result<T_, E_>::map_ok(F fn) const& -> Option<std::invoke_result_t<F, T_ const&> > {
+	auto Result<T_, E_>::map_ok(F fn) const& -> Result<std::invoke_result_t<F, T_ const&>, E_ const&> {
+		using Return = Result<std::invoke_result_t<F, T_ const&>, E_ const&>;
 		if(is_ok()) {
-			return {fn(ok())};
+			return Return::Ok(fn(ok()));
 		}
-		return {};
+		return Return::Error(error());
 	}
 	
 	template<typename T_, typename E_>
 	template<typename F>
-	auto Result<T_, E_>::map_ok(F fn)& -> Option<std::invoke_result_t<F, T_&> > {
+	auto Result<T_, E_>::map_ok(F fn)& -> Result<std::invoke_result_t<F, T_&>, E_&> {
+		using Return = Result<std::invoke_result_t<F, T_&>, E_&>;
 		if(is_ok()) {
-			return {fn(ok())};
+			return Return::Ok(fn(ok()));
 		}
-		return {};
+		return Return::Error(error());
 	}
 	
 	template<typename T_, typename E_>
 	template<typename F>
-	auto Result<T_, E_>::map_ok(F fn)&& -> Option<std::invoke_result_t<F, T_> > {
+	auto Result<T_, E_>::map_ok(F fn)&& -> Result<std::invoke_result_t<F, T_>, E_> {
+		using Return = Result<std::invoke_result_t<F, T_>, E_>;
 		if(is_ok()) {
-			return {fn(std::forward<T_>(ok()))};
+			return Return::Ok(fn(std::forward<T_>(ok())));
 		}
-		return {};
+		return Return::Error(std::forward<E_>(error()));
 	}
 	
 	template<typename T_, typename E_>
@@ -291,29 +294,32 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	template<typename F>
-	auto Result<T_, E_>::map_error(F fn) const& -> Option<std::invoke_result_t<F, E_ const&> > {
+	auto Result<T_, E_>::map_error(F fn) const& -> Result<T_ const&, std::invoke_result_t<F, E_ const&> > {
+		using Return = Result<T_ const&, std::invoke_result_t<F, E_ const&> >;
 		if(is_ok()) {
-			return {};
+			return Return::Ok(ok());
 		}
-		return {fn(error())};
+		return Return::Error(fn(error()));
 	}
 	
 	template<typename T_, typename E_>
 	template<typename F>
-	auto Result<T_, E_>::map_error(F fn)& -> Option<std::invoke_result_t<F, E_&> > {
+	auto Result<T_, E_>::map_error(F fn)& -> Result<T_&, std::invoke_result_t<F, E_&> > {
+		using Return = Result<T_&, std::invoke_result_t<F, E_&> >;
 		if(is_ok()) {
-			return {};
+			return Return::Ok(ok());
 		}
-		return {fn(error())};
+		return Return::Error(fn(error()));
 	}
 	
 	template<typename T_, typename E_>
 	template<typename F>
-	auto Result<T_, E_>::map_error(F fn)&& -> Option<std::invoke_result_t<F, E_> > {
+	auto Result<T_, E_>::map_error(F fn)&& -> Result<T_, std::invoke_result_t<F, E_> > {
+		using Return = Result<T_, std::invoke_result_t<F, E_> >;
 		if(is_ok()) {
-			return {};
+			return Return::Ok(std::forward<T_>(ok()));
 		}
-		return {fn(std::forward<E_>(error()))};
+		return Return::Error(fn(std::forward<E_>(error())));
 	}
 	
 	template<typename T_, typename E_>

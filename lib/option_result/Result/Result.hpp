@@ -62,13 +62,13 @@ namespace orl {
 		Option<T_> ok_or_none()&& noexcept;
 		
 		template<typename F>
-		Option<std::invoke_result_t<F, T_ const&> > map_ok(F fn) const&;
+		Result<std::invoke_result_t<F, T_ const&>, E_ const&> map_ok(F fn) const&;
 		
 		template<typename F>
-		Option<std::invoke_result_t<F, T_&> > map_ok(F fn)&;
+		Result<std::invoke_result_t<F, T_&>, E_&> map_ok(F fn)&;
 		
 		template<typename F>
-		Option<std::invoke_result_t<F, T_> > map_ok(F fn)&&;
+		Result<std::invoke_result_t<F, T_>, E_> map_ok(F fn)&&;
 		
 		E_ const& error() const& noexcept;
 		
@@ -112,13 +112,13 @@ namespace orl {
 		Option<E_> error_or_none()&& noexcept;
 		
 		template<typename F>
-		Option<std::invoke_result_t<F, E_ const&> > map_error(F fn) const&;
+		Result<T_ const&, std::invoke_result_t<F, E_ const&> > map_error(F fn) const&;
 		
 		template<typename F>
-		Option<std::invoke_result_t<F, E_&> > map_error(F fn)&;
+		Result<T_&, std::invoke_result_t<F, E_&> > map_error(F fn)&;
 		
 		template<typename F>
-		Option<std::invoke_result_t<F, E_> > map_error(F fn)&&;
+		Result<T_, std::invoke_result_t<F, E_> > map_error(F fn)&&;
 		
 		T_ const& except() const&;
 		
