@@ -222,6 +222,32 @@ namespace orl {
 	}
 	
 	template<typename T_>
+	detail::OptionIter<const T_&> Option<T_>::begin() const& {
+		if(data_.is_some()) {
+			return detail::OptionIter<T_ const&>{data_.some()};
+		}
+		return detail::OptionIter<T_ const&>{};
+	}
+	
+	template<typename T_>
+	detail::OptionIter<T_&> Option<T_>::begin()& {
+		if(data_.is_some()) {
+			return detail::OptionIter<T_&>{data_.some()};
+		}
+		return detail::OptionIter<T_&>{};
+	}
+	
+	template<typename T_>
+	detail::OptionIter<const T_&> Option<T_>::end() const& {
+		return detail::OptionIter<T_ const&>{};
+	}
+	
+	template<typename T_>
+	detail::OptionIter<T_&> Option<T_>::end()& {
+		return detail::OptionIter<T_&>{};
+	}
+	
+	template<typename T_>
 	Option<T_>::operator bool() const noexcept {
 		return data_.is_some();
 	}
@@ -283,6 +309,26 @@ namespace orl {
 		template<typename T_>
 		T_* const& OptionImpl<T_*>::some() const noexcept {
 			return data_;
+		}
+		
+		template<typename T_>
+		OptionIter<T_>::OptionIter(T_ data) : data_(std::forward<T_>(data)) {
+		}
+		
+		template<typename T_>
+		T_ OptionIter<T_>::operator*() {
+			return std::forward<T_>(data_.some());
+		}
+		
+		template<typename T_>
+		OptionIter<T_>& OptionIter<T_>::operator++() {
+			data_ = Option<T_>{};
+			return *this;
+		}
+		
+		template<typename T_>
+		bool OptionIter<T_>::operator!=(const OptionIter<T_>& other) {
+			return data_.is_some();
 		}
 	}
 }

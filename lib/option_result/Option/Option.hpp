@@ -12,6 +12,9 @@ namespace orl {
 	namespace detail {
 		template<typename T_>
 		class OptionImpl;
+		
+		template<typename T_>
+		class OptionIter;
 	}
 	
 	template<typename T_>
@@ -92,6 +95,14 @@ namespace orl {
 		
 		std::optional<T_> optional()&& noexcept;
 		
+		detail::OptionIter<T_ const&> begin() const&;
+		
+		detail::OptionIter<T_&> begin() &;
+		
+		detail::OptionIter<T_ const&> end() const&;
+		
+		detail::OptionIter<T_&> end() &;
+		
 		operator bool() const noexcept;
 		
 		template<typename T>
@@ -134,6 +145,23 @@ namespace orl {
 			T_* const& some() const noexcept;
 			
 			T_*& some() noexcept;
+		};
+		
+		template<typename T_>
+		class OptionIter {
+		public:
+			OptionIter(T_ data);
+			
+			OptionIter() = default;
+			
+			T_ operator*();
+			
+			OptionIter& operator++();
+			
+			bool operator!=(OptionIter<T_> const& other);
+		
+		private:
+			Option<T_> data_;
 		};
 	}
 }

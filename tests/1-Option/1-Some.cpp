@@ -153,7 +153,30 @@ TEST(Option, Some_8_optional) {
 	}
 }
 
-TEST(Option, Some_9_operator_bool) {
+TEST(Option, None_9_range_based_for) {
+	{
+		const auto opt{orl::Option<int>{7}};
+		auto check{0};
+		
+		for(auto const& value: opt) {
+			check = value;
+		}
+		
+		ASSERT_EQ(check, 7);
+	}
+	{
+		auto opt{orl::Option<int>{7}};
+		auto check{0};
+		
+		for(auto& value: opt) {
+			check = value;
+		}
+		
+		ASSERT_EQ(check, 7);
+	}
+}
+
+TEST(Option, Some_10_operator_bool) {
 	auto opt{orl::Option<int>{7}};
 	
 	ASSERT_TRUE(opt);

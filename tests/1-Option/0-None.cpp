@@ -123,7 +123,30 @@ TEST(Option, None_7_optional) {
 	}
 }
 
-TEST(Option, None_8_operator_bool) {
+TEST(Option, None_8_range_based_for) {
+	{
+		const auto opt{orl::Option<int>{}};
+		auto check{0};
+		
+		for(auto const& value: opt) {
+			check = value;
+		}
+		
+		ASSERT_EQ(check, 0);
+	}
+	{
+		auto opt{orl::Option<int>{}};
+		auto check{0};
+		
+		for(auto& value: opt) {
+			check = value;
+		}
+		
+		ASSERT_EQ(check, 0);
+	}
+}
+
+TEST(Option, None_9_operator_bool) {
 	auto opt{orl::Option<int>{}};
 	
 	ASSERT_FALSE(opt);
