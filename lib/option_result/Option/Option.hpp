@@ -95,13 +95,13 @@ namespace orl {
 		
 		std::optional<T_> optional()&& noexcept;
 		
-		detail::OptionIter<T_ const&> begin() const&;
+		detail::OptionIter<T_ const&> begin() const;
 		
-		detail::OptionIter<T_&> begin() &;
+		detail::OptionIter<T_&> begin();
 		
-		detail::OptionIter<T_ const&> end() const&;
+		detail::OptionIter<T_ const&> end() const;
 		
-		detail::OptionIter<T_&> end() &;
+		detail::OptionIter<T_&> end();
 		
 		operator bool() const noexcept;
 		

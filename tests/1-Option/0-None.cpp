@@ -129,7 +129,7 @@ TEST(Option, None_8_range_based_for) {
 		auto check{0};
 		
 		for(auto const& value: opt) {
-			check = value;
+			check += value;
 		}
 		
 		ASSERT_EQ(check, 0);
@@ -139,7 +139,7 @@ TEST(Option, None_8_range_based_for) {
 		auto check{0};
 		
 		for(auto& value: opt) {
-			check = value;
+			check += value;
 		}
 		
 		ASSERT_EQ(check, 0);

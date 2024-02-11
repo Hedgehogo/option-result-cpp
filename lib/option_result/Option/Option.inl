@@ -222,7 +222,7 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	detail::OptionIter<const T_&> Option<T_>::begin() const& {
+	detail::OptionIter<const T_&> Option<T_>::begin() const {
 		if(data_.is_some()) {
 			return detail::OptionIter<T_ const&>{data_.some()};
 		}
@@ -230,7 +230,7 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	detail::OptionIter<T_&> Option<T_>::begin()& {
+	detail::OptionIter<T_&> Option<T_>::begin() {
 		if(data_.is_some()) {
 			return detail::OptionIter<T_&>{data_.some()};
 		}
@@ -238,12 +238,12 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	detail::OptionIter<const T_&> Option<T_>::end() const& {
+	detail::OptionIter<const T_&> Option<T_>::end() const {
 		return detail::OptionIter<T_ const&>{};
 	}
 	
 	template<typename T_>
-	detail::OptionIter<T_&> Option<T_>::end()& {
+	detail::OptionIter<T_&> Option<T_>::end() {
 		return detail::OptionIter<T_&>{};
 	}
 	
