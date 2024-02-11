@@ -36,11 +36,6 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	auto Result<T_, E_>::move_ok() noexcept -> T_ {
-		return std::forward<T_>(std::get<0>(data_));
-	}
-	
-	template<typename T_, typename E_>
 	auto Result<T_, E_>::ok_or(T_ const& value) const& noexcept -> T_ {
 		if(is_ok()) {
 			return ok();
@@ -58,14 +53,6 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	auto Result<T_, E_>::ok_or(T_&& value)&& noexcept -> T_ {
-		if(is_ok()) {
-			return std::forward<T_>(ok());
-		}
-		return std::forward<T_>(value);
-	}
-	
-	template<typename T_, typename E_>
-	auto Result<T_, E_>::move_ok_or(T_&& value) noexcept -> T_ {
 		if(is_ok()) {
 			return std::forward<T_>(ok());
 		}
@@ -93,15 +80,6 @@ namespace orl {
 	template<typename T_, typename E_>
 	template<typename F>
 	auto Result<T_, E_>::ok_or_else(F fn)&& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
-		if(is_ok()) {
-			return std::forward<T_>(ok());
-		}
-		return fn();
-	}
-	
-	template<typename T_, typename E_>
-	template<typename F>
-	auto Result<T_, E_>::move_ok_or_else(F fn) noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
 		if(is_ok()) {
 			return std::forward<T_>(ok());
 		}
@@ -187,11 +165,6 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	auto Result<T_, E_>::move_error() noexcept -> E_ {
-		return std::forward<E_>(std::get<1>(data_));
-	}
-	
-	template<typename T_, typename E_>
 	auto Result<T_, E_>::error_or(E_ const& value) const& noexcept -> E_ {
 		if(is_ok()) {
 			return value;
@@ -216,14 +189,6 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	auto Result<T_, E_>::move_error_or(E_&& value) noexcept -> E_ {
-		if(is_ok()) {
-			return std::forward<E_>(value);
-		}
-		return std::forward<E_>(error());
-	}
-	
-	template<typename T_, typename E_>
 	template<typename F>
 	auto Result<T_, E_>::error_or_else(F fn) const& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
 		if(is_ok()) {
@@ -244,15 +209,6 @@ namespace orl {
 	template<typename T_, typename E_>
 	template<typename F>
 	auto Result<T_, E_>::error_or_else(F fn)&& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
-		if(is_ok()) {
-			return fn();
-		}
-		return std::forward<E_>(error());
-	}
-	
-	template<typename T_, typename E_>
-	template<typename F>
-	auto Result<T_, E_>::move_error_or_else(F fn) noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
 		if(is_ok()) {
 			return fn();
 		}
@@ -340,14 +296,6 @@ namespace orl {
 	
 	template<typename T_, typename E_>
 	auto Result<T_, E_>::except()&& -> T_ {
-		if(!is_ok()) {
-			orl::except(error());
-		}
-		return std::forward<T_>(ok());
-	}
-	
-	template<typename T_, typename E_>
-	auto Result<T_, E_>::move_except() -> T_ {
 		if(!is_ok()) {
 			orl::except(error());
 		}

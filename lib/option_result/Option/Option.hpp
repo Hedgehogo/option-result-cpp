@@ -29,15 +29,11 @@ namespace orl {
 		
 		T_ some()&& noexcept;
 		
-		T_ move_some() noexcept;
-		
 		T_ some_or(T_ const& value) const& noexcept;
 		
 		T_& some_or(T_& value)& noexcept;
 		
 		T_ some_or(T_&& value)&& noexcept;
-		
-		T_ move_some_or(T_&& value) noexcept;
 		
 		template<typename F>
 		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
@@ -50,10 +46,6 @@ namespace orl {
 		template<typename F>
 		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
 		some_or_else(F fn)&& noexcept;
-		
-		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
-		move_some_or_else(F fn) noexcept;
 		
 		template<typename R = std::remove_pointer_t<T_>, typename... A>
 		T_ some_or_ptr(A&& ... args) const noexcept;
@@ -93,9 +85,6 @@ namespace orl {
 		
 		template<typename E = std::runtime_error>
 		T_ except(E const& exception = std::runtime_error("Some was requested, but the orl::Option was None"))&&;
-		
-		template<typename E = std::runtime_error>
-		T_ move_except(const E& exception = std::runtime_error("Some was requested, but the orl::Option was None"));
 		
 		std::optional<ref<T_ const&> > optional() const& noexcept;
 		

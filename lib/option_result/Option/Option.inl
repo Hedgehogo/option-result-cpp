@@ -30,11 +30,6 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	auto Option<T_>::move_some() noexcept -> T_ {
-		return std::forward<T_>(data_.some());
-	}
-	
-	template<typename T_>
 	auto Option<T_>::some_or(T_ const& value) const& noexcept -> T_ {
 		if(data_.is_some()) {
 			return data_.some();
@@ -52,14 +47,6 @@ namespace orl {
 	
 	template<typename T_>
 	auto Option<T_>::some_or(T_&& value)&& noexcept -> T_ {
-		if(data_.is_some()) {
-			return std::forward<T_>(data_.some());
-		}
-		return std::forward<T_>(value);
-	}
-	
-	template<typename T_>
-	auto Option<T_>::move_some_or(T_&& value) noexcept -> T_ {
 		if(data_.is_some()) {
 			return std::forward<T_>(data_.some());
 		}
@@ -87,15 +74,6 @@ namespace orl {
 	template<typename T_>
 	template<typename F>
 	auto Option<T_>::some_or_else(F fn)&& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
-		if(data_.is_some()) {
-			return std::forward<T_>(data_.some());
-		}
-		return fn();
-	}
-	
-	template<typename T_>
-	template<typename F>
-	auto Option<T_>::move_some_or_else(F fn) noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_> {
 		if(data_.is_some()) {
 			return std::forward<T_>(data_.some());
 		}
@@ -213,15 +191,6 @@ namespace orl {
 	template<typename T_>
 	template<typename E>
 	auto Option<T_>::except(E const& exception)&& -> T_ {
-		if(!data_.is_some()) {
-			orl::except(exception);
-		}
-		return std::forward<T_>(data_.some());
-	}
-	
-	template<typename T_>
-	template<typename E>
-	auto Option<T_>::move_except(E const& exception) -> T_ {
 		if(!data_.is_some()) {
 			orl::except(exception);
 		}

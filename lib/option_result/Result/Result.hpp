@@ -26,15 +26,11 @@ namespace orl {
 		
 		T_ ok()&& noexcept;
 		
-		T_ move_ok() noexcept;
-		
 		T_ ok_or(T_ const& value) const& noexcept;
 		
 		T_& ok_or(T_& value)& noexcept;
 		
 		T_ ok_or(T_&& value)&& noexcept;
-		
-		T_ move_ok_or(T_&& value) noexcept;
 		
 		template<typename F>
 		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
@@ -47,10 +43,6 @@ namespace orl {
 		template<typename F>
 		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
 		ok_or_else(F fn)&& noexcept;
-		
-		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
-		move_ok_or_else(F fn) noexcept;
 		
 		template<typename R = std::remove_pointer_t<T_>, typename... A>
 		T_ ok_or_ptr(A&& ... args) const noexcept;
@@ -76,15 +68,11 @@ namespace orl {
 		
 		E_ error()&& noexcept;
 		
-		E_ move_error() noexcept;
-		
 		E_ error_or(E_ const& value) const& noexcept;
 		
 		E_& error_or(E_& value)& noexcept;
 		
 		E_ error_or(E_&& value)&& noexcept;
-		
-		E_ move_error_or(E_&& value) noexcept;
 		
 		template<typename F>
 		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
@@ -97,10 +85,6 @@ namespace orl {
 		template<typename F>
 		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
 		error_or_else(F fn)&& noexcept;
-		
-		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
-		move_error_or_else(F fn) noexcept;
 		
 		template<typename R = std::remove_pointer_t<E_>, typename... A>
 		E_ error_or_ptr(A&& ... args) const noexcept;
@@ -125,8 +109,6 @@ namespace orl {
 		T_& except()&;
 		
 		T_ except()&&;
-		
-		T_ move_except();
 		
 		operator bool() const noexcept;
 		
