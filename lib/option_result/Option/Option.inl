@@ -370,6 +370,21 @@ namespace orl {
 		return {};
 	}
 	
+	template<typename T>
+	auto operator&&(bool first, const Option<T>& second) noexcept -> Option<const T&> {
+		return second && first;
+	}
+	
+	template<typename T>
+	auto operator&&(bool first, Option<T>& second) noexcept -> Option<T&> {
+		return second && first;
+	}
+	
+	template<typename T>
+	auto operator&&(bool first, Option<T>&& second) noexcept -> Option<T> {
+		return std::move(second) && first;
+	}
+	
 	namespace detail {
 		template<typename T_>
 		OptionImpl<T_>::OptionImpl(T_ data) noexcept : data_(std::forward<T_>(data)) {

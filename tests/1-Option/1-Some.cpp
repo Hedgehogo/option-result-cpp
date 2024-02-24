@@ -246,19 +246,27 @@ TEST(Option, Some_11_operator_and) {
 			const auto opt{orl::Option<int>{7}};
 			
 			ASSERT_EQ(opt && false, orl::Option<int const&>{});
+			ASSERT_EQ(false && opt, orl::Option<int const&>{});
 			ASSERT_EQ(opt && true, orl::Option<int const&>{opt.except()});
+			ASSERT_EQ(true && opt, orl::Option<int const&>{opt.except()});
 		}
 		{
 			auto opt{orl::Option<int>{7}};
 			
 			ASSERT_EQ(opt && false, orl::Option<int&>{});
+			ASSERT_EQ(false && opt, orl::Option<int&>{});
 			ASSERT_EQ(opt && true, orl::Option<int&>{opt.except()});
+			ASSERT_EQ(true && opt, orl::Option<int&>{opt.except()});
 		}
 		{
-			auto opt{orl::Option<int>{7}};
+			auto opt = [] {
+				return orl::Option<int>{7};
+			};
 			
-			ASSERT_EQ(std::move(opt) && false, orl::Option<int>{});
-			ASSERT_EQ(std::move(opt) && true, orl::Option<int>{7});
+			ASSERT_EQ(opt() && false, orl::Option<int>{});
+			ASSERT_EQ(false && opt(), orl::Option<int>{});
+			ASSERT_EQ(opt() && true, orl::Option<int>{7});
+			ASSERT_EQ(true && opt(), orl::Option<int>{7});
 		}
 	}
 }

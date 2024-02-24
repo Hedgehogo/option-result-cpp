@@ -155,6 +155,15 @@ namespace orl {
 		detail::OptionImpl<T_> data_;
 	};
 	
+	template<typename T>
+	Option<T const&> operator&&(bool first, Option<T> const& second) noexcept;
+	
+	template<typename T>
+	Option<T&> operator&&(bool first, Option<T>& second) noexcept;
+	
+	template<typename T>
+	Option<T> operator&&(bool first, Option<T>&& second) noexcept;
+	
 	namespace detail {
 		template<typename T_>
 		class OptionImpl {
