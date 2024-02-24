@@ -303,11 +303,6 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	Result<T_, E_>::operator bool() const noexcept {
-		return is_ok();
-	}
-	
-	template<typename T_, typename E_>
 	template<typename T, typename E>
 	auto Result<T_, E_>::operator==(Result<T, E> const& other) const noexcept -> bool {
 		if(is_ok() == other.is_ok()) {

@@ -146,13 +146,7 @@ TEST(Option, None_8_range_based_for) {
 	}
 }
 
-TEST(Option, None_9_operator_bool) {
-	auto opt{orl::Option<int>{}};
-	
-	ASSERT_FALSE(opt);
-}
-
-TEST(Option, None_10_operator_and) {
+TEST(Option, None_9_operator_and) {
 	{
 		{
 			const auto first_opt{orl::Option<int>{}};
@@ -195,7 +189,7 @@ TEST(Option, None_10_operator_and) {
 	}
 }
 
-TEST(Option, None_11_operator_or) {
+TEST(Option, None_10_operator_or) {
 	{
 		{
 			const auto first_opt{orl::Option<int>{}};

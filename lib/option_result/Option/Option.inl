@@ -222,7 +222,7 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	detail::OptionIter<const T_&> Option<T_>::begin() const {
+	auto Option<T_>::begin() const -> detail::OptionIter<const T_&> {
 		if(data_.is_some()) {
 			return detail::OptionIter<T_ const&>{data_.some()};
 		}
@@ -230,7 +230,7 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	detail::OptionIter<T_&> Option<T_>::begin() {
+	auto Option<T_>::begin() -> detail::OptionIter<T_&> {
 		if(data_.is_some()) {
 			return detail::OptionIter<T_&>{data_.some()};
 		}
@@ -238,18 +238,13 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	detail::OptionIter<const T_&> Option<T_>::end() const {
+	auto Option<T_>::end() const -> detail::OptionIter<const T_&> {
 		return detail::OptionIter<T_ const&>{};
 	}
 	
 	template<typename T_>
-	detail::OptionIter<T_&> Option<T_>::end() {
+	auto Option<T_>::end() -> detail::OptionIter<T_&> {
 		return detail::OptionIter<T_&>{};
-	}
-	
-	template<typename T_>
-	Option<T_>::operator bool() const noexcept {
-		return data_.is_some();
 	}
 	
 	template<typename T_>
@@ -266,7 +261,7 @@ namespace orl {
 	
 	template<typename T_>
 	template<typename T>
-	Option<std::tuple<T_ const&, T const&> > Option<T_>::operator&&(Option<T> const& other) const& noexcept {
+	auto Option<T_>::operator&&(Option<T> const& other) const& noexcept -> Option<std::tuple<T_ const&, T const&> > {
 		if(data_.is_some() && other.is_some()) {
 			return {{data_.some(), other.some()}};
 		}
@@ -275,7 +270,7 @@ namespace orl {
 	
 	template<typename T_>
 	template<typename T>
-	Option<std::tuple<T_&, T&> > Option<T_>::operator&&(Option<T>& other)& noexcept {
+	auto Option<T_>::operator&&(Option<T>& other)& noexcept -> Option<std::tuple<T_&, T&> > {
 		if(data_.is_some() && other.is_some()) {
 			return {{data_.some(), other.some()}};
 		}
@@ -284,7 +279,7 @@ namespace orl {
 	
 	template<typename T_>
 	template<typename T>
-	Option<std::tuple<T_, T> > Option<T_>::operator&&(Option<T>&& other)&& noexcept {
+	auto Option<T_>::operator&&(Option<T>&& other)&& noexcept -> Option<std::tuple<T_, T> > {
 		if(data_.is_some() && other.is_some()) {
 			return {{std::forward<T_>(data_.some()), std::move(other).some()}};
 		}
@@ -292,7 +287,7 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	Option<T_ const&> Option<T_>::operator||(Option<T_> const& other) const& noexcept {
+	auto Option<T_>::operator||(Option<T_> const& other) const& noexcept -> Option<T_ const&> {
 		if(data_.is_some()) {
 			return {data_.some()};
 		}
@@ -303,7 +298,7 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	Option<T_&> Option<T_>::operator||(Option<T_>& other)& noexcept {
+	auto Option<T_>::operator||(Option<T_>& other)& noexcept -> Option<T_&> {
 		if(data_.is_some()) {
 			return {data_.some()};
 		}
@@ -314,7 +309,7 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	Option<T_> Option<T_>::operator||(Option<T_>&& other)&& noexcept {
+	auto Option<T_>::operator||(Option<T_>&& other)&& noexcept -> Option<T_> {
 		if(data_.is_some()) {
 			return {std::forward<T_>(data_.some())};
 		}
@@ -334,17 +329,17 @@ namespace orl {
 		}
 		
 		template<typename T_>
-		bool OptionImpl<T_>::is_some() const noexcept {
+		auto OptionImpl<T_>::is_some() const noexcept -> bool {
 			return data_.has_value();
 		}
 		
 		template<typename T_>
-		T_& OptionImpl<T_>::some() noexcept {
+		auto OptionImpl<T_>::some() noexcept -> T_& {
 			return *data_;
 		}
 		
 		template<typename T_>
-		T_ const& OptionImpl<T_>::some() const noexcept {
+		auto OptionImpl<T_>::some() const noexcept -> T_ const& {
 			return *data_;
 		}
 		
@@ -357,17 +352,17 @@ namespace orl {
 		}
 		
 		template<typename T_>
-		bool OptionImpl<T_*>::is_some() const noexcept {
+		auto OptionImpl<T_*>::is_some() const noexcept -> bool {
 			return data_ != nullptr;
 		}
 		
 		template<typename T_>
-		T_*& OptionImpl<T_*>::some() noexcept {
+		auto OptionImpl<T_*>::some() noexcept -> T_*& {
 			return data_;
 		}
 		
 		template<typename T_>
-		T_* const& OptionImpl<T_*>::some() const noexcept {
+		auto OptionImpl<T_*>::some() const noexcept -> T_* const& {
 			return data_;
 		}
 		
@@ -376,18 +371,18 @@ namespace orl {
 		}
 		
 		template<typename T_>
-		T_ OptionIter<T_>::operator*() {
+		auto OptionIter<T_>::operator*() -> T_ {
 			return std::forward<T_>(data_.some());
 		}
 		
 		template<typename T_>
-		OptionIter<T_>& OptionIter<T_>::operator++() {
+		auto OptionIter<T_>::operator++() -> OptionIter<T_>& {
 			data_ = Option<T_>{};
 			return *this;
 		}
 		
 		template<typename T_>
-		bool OptionIter<T_>::operator!=(const OptionIter<T_>& other) {
+		auto OptionIter<T_>::operator!=(const OptionIter<T_>& other) -> bool {
 			return data_.is_some();
 		}
 	}

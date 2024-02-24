@@ -211,9 +211,3 @@ TEST(Result, Ok_11_except) {
 		ASSERT_EQ(std::move(res).except(), 7);
 	}
 }
-
-TEST(Result, Ok_12_operator_bool) {
-	auto res{orl::Result<int, int>::Ok(7)};
-	
-	ASSERT_TRUE(res);
-}

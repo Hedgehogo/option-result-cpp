@@ -103,8 +103,6 @@ namespace orl {
 		
 		detail::OptionIter<T_&> end();
 		
-		operator bool() const noexcept;
-		
 		template<typename T>
 		bool operator==(Option<T> const& other) const noexcept;
 		
@@ -130,9 +128,6 @@ namespace orl {
 	namespace detail {
 		template<typename T_>
 		class OptionImpl {
-		private:
-			std::optional<ref<T_> > data_;
-		
 		public:
 			OptionImpl(T_ data) noexcept;
 			
@@ -143,13 +138,13 @@ namespace orl {
 			T_& some() noexcept;
 			
 			T_ const& some() const noexcept;
+		
+		private:
+			std::optional<ref<T_> > data_;
 		};
 		
 		template<typename T_>
 		class OptionImpl<T_*> {
-		private:
-			T_* data_;
-		
 		public:
 			OptionImpl(T_* data) noexcept;
 			
@@ -160,6 +155,9 @@ namespace orl {
 			T_* const& some() const noexcept;
 			
 			T_*& some() noexcept;
+		
+		private:
+			T_* data_;
 		};
 		
 		template<typename T_>

@@ -211,9 +211,3 @@ TEST(Result, Error_11_except) {
 		ASSERT_THROW(std::move(res).except(), int);
 	}
 }
-
-TEST(Result, Error_12_operator_bool) {
-	auto res{orl::Result<int, int>::Error(15)};
-	
-	ASSERT_FALSE(res);
-}

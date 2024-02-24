@@ -110,8 +110,6 @@ namespace orl {
 		
 		T_ except()&&;
 		
-		operator bool() const noexcept;
-		
 		template<typename T, typename E>
 		bool operator==(Result<T, E> const& other) const noexcept;
 	
