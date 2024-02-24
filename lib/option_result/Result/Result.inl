@@ -180,7 +180,7 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
-	bool Result<T_, E_>::is_error() const noexcept {
+	auto Result<T_, E_>::is_error() const noexcept -> bool {
 		return !is_ok();
 	}
 	

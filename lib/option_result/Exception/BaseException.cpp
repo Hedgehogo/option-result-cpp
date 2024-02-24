@@ -3,22 +3,22 @@
 #include <ostream>
 
 namespace orl {
-	std::string BaseException::get_note() const {
-		return std::string();
+	auto BaseException::get_note() const -> std::string {
+		return std::string{};
 	}
 	
-	std::string BaseException::get_full_description() const {
+	auto BaseException::get_full_description() const -> std::string {
 		return get_note() + get_description();
 	}
 	
-	const char* BaseException::what() const noexcept {
+	auto BaseException::what() const noexcept -> const char* {
 		std::string str{get_full_description()};
 		char* result{new char[str.size() + 1]{}};
 		std::strcpy(result, str.c_str());
 		return result;
 	}
 	
-	std::ostream& operator<<(std::ostream& stream, BaseException const& exception) {
+	auto operator<<(std::ostream& stream, BaseException const& exception) -> std::ostream& {
 		stream << exception.get_description();
 		return stream;
 	}

@@ -6,35 +6,35 @@
 namespace orl {
 	template<typename... Ts_>
 	class Error : public BaseException {
-	private:
-		std::variant<Ts_...> errors_;
-	
 	public:
 		template<typename... A>
 		Error(A&& ... args);
 		
 		template<std::size_t Index, typename... A>
-		static Error<Ts_...> make(A&&... args);
+		static auto make(A&&... args) -> Error<Ts_...>;
 		
-		std::string get_note() const override;
+		auto get_note() const -> std::string override;
 		
-		std::string get_description() const override;
+		auto get_description() const -> std::string override;
 		
-		void except() const;
-		
-		template<typename R>
-		R& common();
+		auto except() const -> void;
 		
 		template<typename R>
-		R const& common() const;
+		auto common() -> R&;
+		
+		template<typename R>
+		auto common() const -> R const&;
 		
 		template<typename... Ts>
-		Error<Ts...> move_cast();
+		auto move_cast() -> Error<Ts...>;
 		
 		template<typename... Ts>
-		Error<Ts_..., Ts...> move_upcast();
+		auto move_upcast() -> Error<Ts_..., Ts...>;
 		
-		const std::variant<Ts_...>& variant() const;
+		auto variant() const -> std::variant<Ts_...> const&;
+		
+	private:
+		std::variant<Ts_...> errors_;
 	};
 	
 	namespace detail {
@@ -46,10 +46,10 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	constexpr bool is_error = detail::IsError<T_>::value;
+	constexpr auto is_error = detail::IsError<T_>::value;
 	
 	template<typename T>
-	void except(T const& exception);
+	auto except(T const& exception) -> void;
 }
 
 #include "Error.inl"

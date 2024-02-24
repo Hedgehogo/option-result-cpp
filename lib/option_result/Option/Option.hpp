@@ -39,117 +39,114 @@ namespace orl {
 		
 		Option() noexcept;
 		
-		bool is_some() const noexcept;
+		auto is_some() const noexcept -> bool;
 		
-		T_ const& some() const& noexcept;
+		auto some() const& noexcept -> T_ const&;
 		
-		T_& some()& noexcept;
+		auto some()& noexcept -> T_&;
 		
-		T_ some()&& noexcept;
+		auto some()&& noexcept -> T_;
 		
-		T_ some_or(T_ const& value) const& noexcept;
+		auto some_or(T_ const& value) const& noexcept -> T_;
 		
-		T_& some_or(T_& value)& noexcept;
+		auto some_or(T_& value)& noexcept -> T_&;
 		
-		T_ some_or(T_&& value)&& noexcept;
-		
-		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
-		some_or_else(F fn) const& noexcept;
+		auto some_or(T_&& value)&& noexcept -> T_;
 		
 		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_&, F>, T_&>
-		some_or_else(F fn)& noexcept;
+		auto some_or_else(F fn) const& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>;
 		
 		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
-		some_or_else(F fn)&& noexcept;
+		auto some_or_else(F fn)& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_&, F>, T_&>;
+		
+		template<typename F>
+		auto some_or_else(F fn)&& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>;
 		
 		template<typename R = std::remove_pointer_t<T_>, typename... A>
-		T_ some_or_ptr(A&& ... args) const noexcept;
+		auto some_or_ptr(A&& ... args) const noexcept -> T_;
 		
 		template<typename F>
-		Option<std::invoke_result_t<F, T_ const&> > map(F fn) const&;
+		auto map(F fn) const& -> Option<std::invoke_result_t<F, T_ const&> >;
 		
 		template<typename F>
-		Option<std::invoke_result_t<F, T_&> > map(F fn)&;
+		auto map(F fn)& -> Option<std::invoke_result_t<F, T_&> >;
 		
 		template<typename F>
-		Option<std::invoke_result_t<F, T_> > map(F fn)&&;
+		auto map(F fn)&& -> Option<std::invoke_result_t<F, T_> >;
 		
 		template<typename F>
-		Option<OptionSomeT<std::invoke_result_t<F, T_ const&> > > and_then(F fn) const&;
+		auto and_then(F fn) const& -> Option<OptionSomeT<std::invoke_result_t<F, T_ const&> > >;
 		
 		template<typename F>
-		Option<OptionSomeT<std::invoke_result_t<F, T_&> > > and_then(F fn)&;
+		auto and_then(F fn)& -> Option<OptionSomeT<std::invoke_result_t<F, T_&> > >;
 		
 		template<typename F>
-		Option<OptionSomeT<std::invoke_result_t<F, T_> > > and_then(F fn)&&;
+		auto and_then(F fn)&& -> Option<OptionSomeT<std::invoke_result_t<F, T_> > >;
 		
 		template<typename E>
-		Result<T_ const&, E> ok_or(E error) const& noexcept;
+		auto ok_or(E error) const& noexcept -> Result<T_ const&, E>;
 		
 		template<typename E>
-		Result<T_&, E> ok_or(E error)& noexcept;
+		auto ok_or(E error)& noexcept -> Result<T_&, E>;
 		
 		template<typename E>
-		Result<T_, E> ok_or(E error)&& noexcept;
+		auto ok_or(E error)&& noexcept -> Result<T_, E>;
 		
 		template<typename T>
-		Result<T, T_ const&> error_or(T ok) const& noexcept;
+		auto error_or(T ok) const& noexcept -> Result<T, T_ const&>;
 		
 		template<typename T>
-		Result<T, T_&> error_or(T ok)& noexcept;
+		auto error_or(T ok)& noexcept -> Result<T, T_&>;
 		
 		template<typename T>
-		Result<T, T_> error_or(T ok)&& noexcept;
+		auto error_or(T ok)&& noexcept -> Result<T, T_>;
 		
 		template<typename E = std::runtime_error>
-		T_ const& except(E const& exception = std::runtime_error("Some was requested, but the orl::Option was None")) const&;
+		auto except(E const& exception = std::runtime_error("Some was requested, but the orl::Option was None")) const& -> T_ const&;
 		
 		template<typename E = std::runtime_error>
-		T_& except(E const& exception = std::runtime_error("Some was requested, but the orl::Option was None"))&;
+		auto except(E const& exception = std::runtime_error("Some was requested, but the orl::Option was None"))& -> T_&;
 		
 		template<typename E = std::runtime_error>
-		T_ except(E const& exception = std::runtime_error("Some was requested, but the orl::Option was None"))&&;
+		auto except(E const& exception = std::runtime_error("Some was requested, but the orl::Option was None"))&& -> T_;
 		
-		std::optional<ref<T_ const&> > optional() const& noexcept;
+		auto optional() const& noexcept -> std::optional<ref<T_ const&> >;
 		
-		std::optional<ref<T_&> > optional()& noexcept;
+		auto optional()& noexcept -> std::optional<ref<T_&> >;
 		
-		std::optional<T_> optional()&& noexcept;
+		auto optional()&& noexcept -> std::optional<T_>;
 		
-		detail::OptionIter<T_ const&> begin() const;
+		auto begin() const -> detail::OptionIter<T_ const&>;
 		
-		detail::OptionIter<T_&> begin();
+		auto begin() -> detail::OptionIter<T_&>;
 		
-		detail::OptionIter<T_ const&> end() const;
+		auto end() const -> detail::OptionIter<T_ const&>;
 		
-		detail::OptionIter<T_&> end();
-		
-		template<typename T>
-		bool operator==(Option<T> const& other) const noexcept;
+		auto end() -> detail::OptionIter<T_&>;
 		
 		template<typename T>
-		Option<std::tuple<T_ const&, T const&> > operator&&(Option<T> const& other) const& noexcept;
+		auto operator==(Option<T> const& other) const noexcept -> bool;
 		
 		template<typename T>
-		Option<std::tuple<T_&, T&> > operator&&(Option<T>& other)& noexcept;
+		auto operator&&(Option<T> const& other) const& noexcept -> Option<std::tuple<T_ const&, T const&> >;
 		
 		template<typename T>
-		Option<std::tuple<T_, T> > operator&&(Option<T>&& other)&& noexcept;
+		auto operator&&(Option<T>& other)& noexcept -> Option<std::tuple<T_&, T&> >;
 		
-		Option<T_ const&> operator&&(bool other) const& noexcept;
+		template<typename T>
+		auto operator&&(Option<T>&& other)&& noexcept -> Option<std::tuple<T_, T> >;
 		
-		Option<T_&> operator&&(bool other)& noexcept;
+		auto operator&&(bool other) const& noexcept -> Option<T_ const&>;
 		
-		Option<T_> operator&&(bool other)&& noexcept;
+		auto operator&&(bool other)& noexcept -> Option<T_&>;
 		
-		Option<T_ const&> operator||(Option<T_> const& other) const& noexcept;
+		auto operator&&(bool other)&& noexcept -> Option<T_>;
 		
-		Option<T_&> operator||(Option<T_>& other)& noexcept;
+		auto operator||(Option<T_> const& other) const& noexcept -> Option<T_ const&>;
 		
-		Option<T_> operator||(Option<T_>&& other)&& noexcept;
+		auto operator||(Option<T_>& other)& noexcept -> Option<T_&>;
+		
+		auto operator||(Option<T_>&& other)&& noexcept -> Option<T_>;
 		
 	private:
 		detail::OptionImpl<T_> data_;
@@ -172,11 +169,11 @@ namespace orl {
 			
 			OptionImpl() noexcept;
 			
-			bool is_some() const noexcept;
+			auto is_some() const noexcept -> bool;
 			
-			T_& some() noexcept;
+			auto some() noexcept -> T_&;
 			
-			T_ const& some() const noexcept;
+			auto some() const noexcept -> T_ const&;
 		
 		private:
 			std::optional<ref<T_> > data_;
@@ -189,11 +186,11 @@ namespace orl {
 			
 			OptionImpl() noexcept;
 			
-			bool is_some() const noexcept;
+			auto is_some() const noexcept -> bool;
 			
-			T_* const& some() const noexcept;
+			auto some() const noexcept -> T_* const&;
 			
-			T_*& some() noexcept;
+			auto some() noexcept -> T_*&;
 		
 		private:
 			T_* data_;
@@ -206,11 +203,11 @@ namespace orl {
 			
 			OptionIter() = default;
 			
-			T_ operator*();
+			auto operator*() -> T_;
 			
-			OptionIter& operator++();
+			auto operator++() -> OptionIter&;
 			
-			bool operator!=(OptionIter<T_> const& other);
+			auto operator!=(OptionIter<T_> const& other) -> bool;
 		
 		private:
 			Option<T_> data_;

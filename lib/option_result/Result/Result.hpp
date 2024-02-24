@@ -41,124 +41,118 @@ namespace orl {
 		using Data = std::variant<ref<T_>, ref<E_> >;
 	
 	public:
-		static Result<T_, E_> Ok(T_ value) noexcept;
+		static auto Ok(T_ value) noexcept -> Result<T_, E_>;
 		
-		static Result<T_, E_> Error(E_ value) noexcept;
+		static auto Error(E_ value) noexcept -> Result<T_, E_>;
 		
-		bool is_ok() const noexcept;
+		auto is_ok() const noexcept -> bool;
 		
-		T_ const& ok() const& noexcept;
+		auto ok() const& noexcept -> T_ const&;
 		
-		T_& ok()& noexcept;
+		auto ok()& noexcept -> T_&;
 		
-		T_ ok()&& noexcept;
+		auto ok()&& noexcept -> T_;
 		
-		T_ ok_or(T_ const& value) const& noexcept;
+		auto ok_or(T_ const& value) const& noexcept -> T_;
 		
-		T_& ok_or(T_& value)& noexcept;
+		auto ok_or(T_& value)& noexcept -> T_&;
 		
-		T_ ok_or(T_&& value)&& noexcept;
-		
-		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
-		ok_or_else(F fn) const& noexcept;
+		auto ok_or(T_&& value)&& noexcept -> T_;
 		
 		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_&, F>, T_&>
-		ok_or_else(F fn)& noexcept;
+		auto ok_or_else(F fn) const& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>;
 		
 		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
-		ok_or_else(F fn)&& noexcept;
+		auto ok_or_else(F fn)& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_&, F>, T_&>;
+		
+		template<typename F>
+		auto ok_or_else(F fn)&& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>;
 		
 		template<typename R = std::remove_pointer_t<T_>, typename... A>
-		T_ ok_or_ptr(A&& ... args) const noexcept;
+		auto ok_or_ptr(A&& ... args) const noexcept -> T_;
 		
-		Option<T_ const&> ok_or_none() const& noexcept;
+		auto ok_or_none() const& noexcept -> Option<T_ const&>;
 		
-		Option<T_&> ok_or_none()& noexcept;
+		auto ok_or_none()& noexcept -> Option<T_&>;
 		
-		Option<T_> ok_or_none()&& noexcept;
-		
-		template<typename F>
-		Result<std::invoke_result_t<F, T_ const&>, E_ const&> map_ok(F fn) const&;
+		auto ok_or_none()&& noexcept -> Option<T_>;
 		
 		template<typename F>
-		Result<std::invoke_result_t<F, T_&>, E_&> map_ok(F fn)&;
+		auto map_ok(F fn) const& -> Result<std::invoke_result_t<F, T_ const&>, E_ const&>;
 		
 		template<typename F>
-		Result<std::invoke_result_t<F, T_>, E_> map_ok(F fn)&&;
+		auto map_ok(F fn)& -> Result<std::invoke_result_t<F, T_&>, E_&>;
 		
 		template<typename F>
-		Result<ResultOkT<std::invoke_result_t<F, T_ const&>, E_ const&>, E_ const&> ok_and_then(F fn) const&;
+		auto map_ok(F fn)&& -> Result<std::invoke_result_t<F, T_>, E_>;
 		
 		template<typename F>
-		Result<ResultOkT<std::invoke_result_t<F, T_&>, E_&>, E_&> ok_and_then(F fn)&;
+		auto ok_and_then(F fn) const& -> Result<ResultOkT<std::invoke_result_t<F, T_ const&>, E_ const&>, E_ const&>;
 		
 		template<typename F>
-		Result<ResultOkT<std::invoke_result_t<F, T_>, E_>, E_> ok_and_then(F fn)&&;
-		
-		bool is_error() const noexcept;
-		
-		E_ const& error() const& noexcept;
-		
-		E_& error()& noexcept;
-		
-		E_ error()&& noexcept;
-		
-		E_ error_or(E_ const& value) const& noexcept;
-		
-		E_& error_or(E_& value)& noexcept;
-		
-		E_ error_or(E_&& value)&& noexcept;
+		auto ok_and_then(F fn)& -> Result<ResultOkT<std::invoke_result_t<F, T_&>, E_&>, E_&>;
 		
 		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
-		error_or_else(F fn) const& noexcept;
+		auto ok_and_then(F fn)&& -> Result<ResultOkT<std::invoke_result_t<F, T_>, E_>, E_>;
+		
+		auto is_error() const noexcept -> bool;
+		
+		auto error() const& noexcept -> E_ const&;
+		
+		auto error()& noexcept -> E_&;
+		
+		auto error()&& noexcept -> E_;
+		
+		auto error_or(E_ const& value) const& noexcept -> E_;
+		
+		auto error_or(E_& value)& noexcept -> E_&;
+		
+		auto error_or(E_&& value)&& noexcept -> E_;
 		
 		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_&, F>, T_&>
-		error_or_else(F fn)& noexcept;
+		auto error_or_else(F fn) const& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>;
 		
 		template<typename F>
-		std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>
-		error_or_else(F fn)&& noexcept;
+		auto error_or_else(F fn)& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_&, F>, T_&>;
+		
+		template<typename F>
+		auto error_or_else(F fn)&& noexcept -> std::enable_if_t<std::is_invocable_r_v<T_, F>, T_>;
 		
 		template<typename R = std::remove_pointer_t<E_>, typename... A>
-		E_ error_or_ptr(A&& ... args) const noexcept;
+		auto error_or_ptr(A&& ... args) const noexcept -> E_;
 		
-		Option<E_ const&> error_or_none() const& noexcept;
+		auto error_or_none() const& noexcept -> Option<E_ const&>;
 		
-		Option<E_&> error_or_none()& noexcept;
+		auto error_or_none()& noexcept -> Option<E_&>;
 		
-		Option<E_> error_or_none()&& noexcept;
-		
-		template<typename F>
-		Result<T_ const&, std::invoke_result_t<F, E_ const&> > map_error(F fn) const&;
+		auto error_or_none()&& noexcept -> Option<E_>;
 		
 		template<typename F>
-		Result<T_&, std::invoke_result_t<F, E_&> > map_error(F fn)&;
+		auto map_error(F fn) const& -> Result<T_ const&, std::invoke_result_t<F, E_ const&> >;
 		
 		template<typename F>
-		Result<T_, std::invoke_result_t<F, E_> > map_error(F fn)&&;
+		auto map_error(F fn)& -> Result<T_&, std::invoke_result_t<F, E_&> >;
 		
 		template<typename F>
-		Result<T_ const&, ResultErrorT<std::invoke_result_t<F, E_ const&>, T_ const&> > error_and_then(F fn) const&;
+		auto map_error(F fn)&& -> Result<T_, std::invoke_result_t<F, E_> >;
 		
 		template<typename F>
-		Result<T_&, ResultErrorT<std::invoke_result_t<F, E_&>, T_&> > error_and_then(F fn)&;
+		auto error_and_then(F fn) const& -> Result<T_ const&, ResultErrorT<std::invoke_result_t<F, E_ const&>, T_ const&> >;
 		
 		template<typename F>
-		Result<T_, ResultErrorT<std::invoke_result_t<F, E_>, T_> > error_and_then(F fn)&&;
+		auto error_and_then(F fn)& -> Result<T_&, ResultErrorT<std::invoke_result_t<F, E_&>, T_&> >;
 		
-		T_ const& except() const&;
+		template<typename F>
+		auto error_and_then(F fn)&& -> Result<T_, ResultErrorT<std::invoke_result_t<F, E_>, T_> >;
 		
-		T_& except()&;
+		auto except() const& -> T_ const&;
 		
-		T_ except()&&;
+		auto except()& -> T_&;
+		
+		auto except()&& -> T_;
 		
 		template<typename T, typename E>
-		bool operator==(Result<T, E> const& other) const noexcept;
+		auto operator==(Result<T, E> const& other) const noexcept -> bool;
 	
 	private:
 		Result(Data&& data);

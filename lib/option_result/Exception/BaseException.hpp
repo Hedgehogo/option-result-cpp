@@ -10,20 +10,20 @@ namespace orl {
 		/// @brief Gets an error note.
 		///
 		/// @return Error note.
-		virtual std::string get_note() const;
+		virtual auto get_note() const -> std::string;
 		
 		/// @brief Gets an error description.
 		///
 		/// @return Error description.
-		virtual std::string get_description() const = 0;
+		virtual auto get_description() const -> std::string = 0;
 		
 		/// @brief Gets a full description of the error.
 		///
 		/// @return Error note + description.
-		std::string get_full_description() const;
+		auto get_full_description() const -> std::string;
 		
-		const char* what() const noexcept final;
+		auto what() const noexcept -> const char* final;
 	};
 	
-	std::ostream& operator<<(std::ostream& stream, const BaseException& exception);
+	auto operator<<(std::ostream& stream, const BaseException& exception) -> std::ostream&;
 }
