@@ -153,13 +153,13 @@ namespace orl {
 	};
 	
 	template<typename T>
-	Option<T const&> operator&&(bool first, Option<T> const& second) noexcept;
+	auto operator&&(bool first, Option<T> const& second) noexcept -> Option<T const&>;
 	
 	template<typename T>
-	Option<T&> operator&&(bool first, Option<T>& second) noexcept;
+	auto operator&&(bool first, Option<T>& second) noexcept -> Option<T&>;
 	
 	template<typename T>
-	Option<T> operator&&(bool first, Option<T>&& second) noexcept;
+	auto operator&&(bool first, Option<T>&& second) noexcept -> Option<T>;
 	
 	namespace detail {
 		template<typename T_>

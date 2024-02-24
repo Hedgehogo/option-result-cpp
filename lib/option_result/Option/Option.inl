@@ -371,7 +371,7 @@ namespace orl {
 	}
 	
 	template<typename T>
-	auto operator&&(bool first, const Option<T>& second) noexcept -> Option<const T&> {
+	auto operator&&(bool first, Option<T> const& second) noexcept -> Option<const T&> {
 		return second && first;
 	}
 	
