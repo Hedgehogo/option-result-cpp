@@ -211,6 +211,26 @@ TEST(Option, None_10_operator_and) {
 			ASSERT_EQ(std::move(first_opt) && std::move(second_opt), (orl::Option<std::tuple<int, int> >{}));
 		}
 	}
+	{
+		{
+			const auto opt{orl::Option<int>{}};
+			
+			ASSERT_EQ(opt && false, orl::Option<int const&>{});
+			ASSERT_EQ(opt && true, orl::Option<int const&>{});
+		}
+		{
+			auto opt{orl::Option<int>{}};
+			
+			ASSERT_EQ(opt && false, orl::Option<int&>{});
+			ASSERT_EQ(opt && true, orl::Option<int&>{});
+		}
+		{
+			auto opt{orl::Option<int>{}};
+			
+			ASSERT_EQ(std::move(opt) && false, orl::Option<int>{});
+			ASSERT_EQ(std::move(opt) && true, orl::Option<int>{});
+		}
+	}
 }
 
 TEST(Option, None_11_operator_or) {

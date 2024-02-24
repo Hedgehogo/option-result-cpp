@@ -314,6 +314,30 @@ namespace orl {
 	}
 	
 	template<typename T_>
+	auto Option<T_>::operator&&(bool other) const& noexcept -> Option<const T_&> {
+		if(data_.is_some() && other) {
+			return {data_.some()};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	auto Option<T_>::operator&&(bool other)& noexcept -> Option<T_&> {
+		if(data_.is_some() && other) {
+			return {data_.some()};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	auto Option<T_>::operator&&(bool other)&& noexcept -> Option<T_> {
+		if(data_.is_some() && other) {
+			return {std::forward<T_>(data_.some())};
+		}
+		return {};
+	}
+	
+	template<typename T_>
 	auto Option<T_>::operator||(Option<T_> const& other) const& noexcept -> Option<T_ const&> {
 		if(data_.is_some()) {
 			return {data_.some()};
