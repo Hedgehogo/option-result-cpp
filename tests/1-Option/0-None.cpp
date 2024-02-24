@@ -85,7 +85,31 @@ TEST(Option, None_5_map) {
 	}
 }
 
-TEST(Option, None_6_except) {
+TEST(Option, None_6_and_then) {
+	{
+		const auto opt{orl::Option<int>{}};
+		
+		ASSERT_EQ(opt.and_then([](int const& some) {
+			return orl::Option<char>{char('a' + char(some))};
+		}).some_or('a'), 'a');
+	}
+	{
+		auto opt{orl::Option<int>{}};
+		
+		ASSERT_EQ(opt.and_then([](int& some) {
+			return orl::Option<char>{char('a' + char(some))};
+		}).some_or('a'), 'a');
+	}
+	{
+		auto opt{orl::Option<int>{}};
+		
+		ASSERT_EQ(std::move(opt).and_then([](int&& some) {
+			return orl::Option<char>{char('a' + char(some))};
+		}).some_or('a'), 'a');
+	}
+}
+
+TEST(Option, None_7_except) {
 	{
 		const auto opt{orl::Option<int>{}};
 		
@@ -105,7 +129,7 @@ TEST(Option, None_6_except) {
 	}
 }
 
-TEST(Option, None_7_optional) {
+TEST(Option, None_8_optional) {
 	{
 		const auto opt{orl::Option<int>{}};
 		
@@ -123,7 +147,7 @@ TEST(Option, None_7_optional) {
 	}
 }
 
-TEST(Option, None_8_range_based_for) {
+TEST(Option, None_9_range_based_for) {
 	{
 		const auto opt{orl::Option<int>{}};
 		auto check{0};
@@ -146,7 +170,7 @@ TEST(Option, None_8_range_based_for) {
 	}
 }
 
-TEST(Option, None_9_operator_and) {
+TEST(Option, None_10_operator_and) {
 	{
 		{
 			const auto first_opt{orl::Option<int>{}};
@@ -189,7 +213,7 @@ TEST(Option, None_9_operator_and) {
 	}
 }
 
-TEST(Option, None_10_operator_or) {
+TEST(Option, None_11_operator_or) {
 	{
 		{
 			const auto first_opt{orl::Option<int>{}};

@@ -117,6 +117,33 @@ namespace orl {
 	}
 	
 	template<typename T_>
+	template<typename F>
+	auto Option<T_>::and_then(F fn) const& -> Option<OptionSomeT<std::invoke_result_t<F, T_ const&> > > {
+		if(data_.is_some()) {
+			return fn(data_.some());
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	template<typename F>
+	auto Option<T_>::and_then(F fn)& -> Option<OptionSomeT<std::invoke_result_t<F, T_&> > > {
+		if(data_.is_some()) {
+			return fn(data_.some());
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	template<typename F>
+	auto Option<T_>::and_then(F fn)&& -> Option<OptionSomeT<std::invoke_result_t<F, T_> > > {
+		if(data_.is_some()) {
+			return fn(std::forward<T_>(data_.some()));
+		}
+		return {};
+	}
+	
+	template<typename T_>
 	template<typename E>
 	auto Option<T_>::ok_or(E error) const& noexcept -> Result<T_ const&, E> {
 		if(data_.is_some()) {

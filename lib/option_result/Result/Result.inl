@@ -150,6 +150,36 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::ok_and_then(F fn) const& -> Result<ResultOkT<std::invoke_result_t<F, T_ const&>, E_ const&>, E_ const&> {
+		using Return = Result<ResultOkT<std::invoke_result_t<F, T_ const&>, E_ const&>, E_ const&>;
+		if(is_ok()) {
+			return fn(ok());
+		}
+		return Return::Error(error());
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::ok_and_then(F fn)& -> Result<ResultOkT<std::invoke_result_t<F, T_&>, E_&>, E_&> {
+		using Return = Result<ResultOkT<std::invoke_result_t<F, T_&>, E_&>, E_&>;
+		if(is_ok()) {
+			return fn(ok());
+		}
+		return Return::Error(error());
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::ok_and_then(F fn)&& -> Result<ResultOkT<std::invoke_result_t<F, T_>, E_>, E_> {
+		using Return = Result<ResultOkT<std::invoke_result_t<F, T_>, E_>, E_>;
+		if(is_ok()) {
+			return fn(std::forward<T_>(ok()));
+		}
+		return Return::Error(std::forward<E_>(error()));
+	}
+	
+	template<typename T_, typename E_>
 	bool Result<T_, E_>::is_error() const noexcept {
 		return !is_ok();
 	}
@@ -281,6 +311,36 @@ namespace orl {
 			return Return::Ok(std::forward<T_>(ok()));
 		}
 		return Return::Error(fn(std::forward<E_>(error())));
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::error_and_then(F fn) const& -> Result<T_ const&, ResultErrorT<std::invoke_result_t<F, E_ const&>, T_ const&> > {
+		using Return = Result<T_ const&, ResultErrorT<std::invoke_result_t<F, E_ const&>, T_ const&> >;
+		if(is_ok()) {
+			return Return::Ok(ok());
+		}
+		return fn(error());
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::error_and_then(F fn)& -> Result<T_&, ResultErrorT<std::invoke_result_t<F, E_&>, T_&> > {
+		using Return = Result<T_&, ResultErrorT<std::invoke_result_t<F, E_&>, T_&> >;
+		if(is_ok()) {
+			return Return::Ok(ok());
+		}
+		return fn(error());
+	}
+	
+	template<typename T_, typename E_>
+	template<typename F>
+	auto Result<T_, E_>::error_and_then(F fn)&& -> Result<T_, ResultErrorT<std::invoke_result_t<F, E_>, T_> > {
+		using Return = Result<T_, ResultErrorT<std::invoke_result_t<F, E_>, T_> >;
+		if(is_ok()) {
+			return Return::Ok(std::forward<T_>(ok()));
+		}
+		return fn(std::forward<E_>(error()));
 	}
 	
 	template<typename T_, typename E_>

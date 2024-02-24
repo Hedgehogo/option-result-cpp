@@ -9,6 +9,33 @@ namespace orl {
 	class Option;
 	
 	template<typename T_, typename E_>
+	class Result;
+	
+	template<typename Type_, typename E_>
+	struct ResultOk {
+	};
+	
+	template<typename T_, typename E_>
+	struct ResultOk<Result<T_, E_>, E_> {
+		using type = T_;
+	};
+	
+	template<typename T, typename E>
+	using ResultOkT = typename ResultOk<T, E>::type;
+	
+	template<typename Type_, typename T_>
+	struct ResultError {
+	};
+	
+	template<typename T_, typename E_>
+	struct ResultError<Result<T_, E_>, T_> {
+		using type = E_;
+	};
+	
+	template<typename Type, typename T>
+	using ResultErrorT = typename ResultError<Type, T>::type;
+	
+	template<typename T_, typename E_>
 	class Result {
 	protected:
 		using Data = std::variant<ref<T_>, ref<E_> >;
@@ -62,6 +89,15 @@ namespace orl {
 		template<typename F>
 		Result<std::invoke_result_t<F, T_>, E_> map_ok(F fn)&&;
 		
+		template<typename F>
+		Result<ResultOkT<std::invoke_result_t<F, T_ const&>, E_ const&>, E_ const&> ok_and_then(F fn) const&;
+		
+		template<typename F>
+		Result<ResultOkT<std::invoke_result_t<F, T_&>, E_&>, E_&> ok_and_then(F fn)&;
+		
+		template<typename F>
+		Result<ResultOkT<std::invoke_result_t<F, T_>, E_>, E_> ok_and_then(F fn)&&;
+		
 		bool is_error() const noexcept;
 		
 		E_ const& error() const& noexcept;
@@ -105,6 +141,15 @@ namespace orl {
 		
 		template<typename F>
 		Result<T_, std::invoke_result_t<F, E_> > map_error(F fn)&&;
+		
+		template<typename F>
+		Result<T_ const&, ResultErrorT<std::invoke_result_t<F, E_ const&>, T_ const&> > error_and_then(F fn) const&;
+		
+		template<typename F>
+		Result<T_&, ResultErrorT<std::invoke_result_t<F, E_&>, T_&> > error_and_then(F fn)&;
+		
+		template<typename F>
+		Result<T_, ResultErrorT<std::invoke_result_t<F, E_>, T_> > error_and_then(F fn)&&;
 		
 		T_ const& except() const&;
 		

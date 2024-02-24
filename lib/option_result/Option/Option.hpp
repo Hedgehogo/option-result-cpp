@@ -18,6 +18,21 @@ namespace orl {
 	}
 	
 	template<typename T_>
+	class Option;
+	
+	template<typename Type_>
+	struct OptionSome {
+	};
+	
+	template<typename T_>
+	struct OptionSome<Option<T_> > {
+		using type = T_;
+	};
+	
+	template<typename Type>
+	using OptionSomeT = typename OptionSome<Type>::type;
+	
+	template<typename T_>
 	class Option {
 	public:
 		Option(T_ data) noexcept;
@@ -61,6 +76,15 @@ namespace orl {
 		
 		template<typename F>
 		Option<std::invoke_result_t<F, T_> > map(F fn)&&;
+		
+		template<typename F>
+		Option<OptionSomeT<std::invoke_result_t<F, T_ const&> > > and_then(F fn) const&;
+		
+		template<typename F>
+		Option<OptionSomeT<std::invoke_result_t<F, T_&> > > and_then(F fn)&;
+		
+		template<typename F>
+		Option<OptionSomeT<std::invoke_result_t<F, T_> > > and_then(F fn)&&;
 		
 		template<typename E>
 		Result<T_ const&, E> ok_or(E error) const& noexcept;
