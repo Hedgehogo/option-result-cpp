@@ -117,7 +117,13 @@ TEST(Result, Ok_6_map_ok) {
 	}
 }
 
-TEST(Result, Ok_7_error_or) {
+TEST(Result, Ok_7_is_error) {
+	auto res{orl::Result<int, int>::Ok(7)};
+	
+	ASSERT_FALSE(res.is_error());
+}
+
+TEST(Result, Ok_8_error_or) {
 	{
 		const auto res{orl::Result<int, int>::Ok(7)};
 		
@@ -136,7 +142,7 @@ TEST(Result, Ok_7_error_or) {
 	}
 }
 
-TEST(Result, Ok_8_error_or_else) {
+TEST(Result, Ok_9_error_or_else) {
 	{
 		const auto res{orl::Result<int, int>::Ok(7)};
 		
@@ -161,7 +167,7 @@ TEST(Result, Ok_8_error_or_else) {
 	}
 }
 
-TEST(Result, Ok_9_error_or_ptr) {
+TEST(Result, Ok_10_error_or_ptr) {
 	auto res{orl::Result<int, int*>::Ok(7)};
 	
 	auto value{res.error_or_ptr(19)};
@@ -170,7 +176,7 @@ TEST(Result, Ok_9_error_or_ptr) {
 	delete value;
 }
 
-TEST(Result, Ok_10_map_error) {
+TEST(Result, Ok_11_map_error) {
 	{
 		const auto res{orl::Result<int, int>::Ok(7)};
 		
@@ -194,7 +200,7 @@ TEST(Result, Ok_10_map_error) {
 	}
 }
 
-TEST(Result, Ok_11_except) {
+TEST(Result, Ok_12_except) {
 	{
 		const auto res{orl::Result<int, int>::Ok(7)};
 		

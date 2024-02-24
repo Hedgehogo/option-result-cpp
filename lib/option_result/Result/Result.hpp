@@ -62,6 +62,8 @@ namespace orl {
 		template<typename F>
 		Result<std::invoke_result_t<F, T_>, E_> map_ok(F fn)&&;
 		
+		bool is_error() const noexcept;
+		
 		E_ const& error() const& noexcept;
 		
 		E_& error()& noexcept;

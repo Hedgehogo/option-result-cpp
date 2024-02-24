@@ -117,7 +117,13 @@ TEST(Result, Error_6_map_ok) {
 	}
 }
 
-TEST(Result, Error_7_error_or) {
+TEST(Result, Error_7_is_error) {
+	auto res{orl::Result<int, int>::Error(15)};
+	
+	ASSERT_TRUE(res.is_error());
+}
+
+TEST(Result, Error_8_error_or) {
 	{
 		const auto res{orl::Result<int, int>::Error(15)};
 		
@@ -136,7 +142,7 @@ TEST(Result, Error_7_error_or) {
 	}
 }
 
-TEST(Result, Error_8_error_or_else) {
+TEST(Result, Error_9_error_or_else) {
 	{
 		const auto res{orl::Result<int, int>::Error(15)};
 		
@@ -161,7 +167,7 @@ TEST(Result, Error_8_error_or_else) {
 	}
 }
 
-TEST(Result, Error_9_error_or_ptr) {
+TEST(Result, Error_10_error_or_ptr) {
 	auto res{orl::Result<int, int*>::Error(new int{15})};
 	
 	auto value{res.error_or_ptr(19)};
@@ -170,7 +176,7 @@ TEST(Result, Error_9_error_or_ptr) {
 	delete value;
 }
 
-TEST(Result, Error_10_map_error) {
+TEST(Result, Error_11_map_error) {
 	{
 		const auto res{orl::Result<int, int>::Error(15)};
 		
@@ -194,7 +200,7 @@ TEST(Result, Error_10_map_error) {
 	}
 }
 
-TEST(Result, Error_11_except) {
+TEST(Result, Error_12_except) {
 	{
 		const auto res{orl::Result<int, int>::Error(15)};
 		

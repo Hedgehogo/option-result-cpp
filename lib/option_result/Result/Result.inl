@@ -150,6 +150,11 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
+	bool Result<T_, E_>::is_error() const noexcept {
+		return !is_ok();
+	}
+	
+	template<typename T_, typename E_>
 	auto Result<T_, E_>::error() const& noexcept -> E_ const& {
 		return std::get<1>(data_);
 	}
