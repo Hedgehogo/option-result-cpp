@@ -110,9 +110,9 @@ namespace orl {
 		template<typename E = std::runtime_error>
 		auto except(E const& exception = std::runtime_error("Some was requested, but the orl::Option was None"))&& -> T_;
 		
-		auto optional() const& noexcept -> std::optional<ref<T_ const&> >;
+		auto optional() const& noexcept -> std::optional<Ref<T_ const&> >;
 		
-		auto optional()& noexcept -> std::optional<ref<T_&> >;
+		auto optional()& noexcept -> std::optional<Ref<T_&> >;
 		
 		auto optional()&& noexcept -> std::optional<T_>;
 		
@@ -182,7 +182,7 @@ namespace orl {
 			auto some() const noexcept -> T_ const&;
 		
 		private:
-			std::optional<ref<T_> > data_;
+			std::optional<Ref<T_> > data_;
 		};
 		
 		template<typename T_>

@@ -133,12 +133,12 @@ TEST(Option, None_8_optional) {
 	{
 		const auto opt{orl::Option<int>{}};
 		
-		ASSERT_EQ(opt.optional(), std::optional<orl::ref<int const&> >{});
+		ASSERT_EQ(opt.optional(), std::optional<orl::Ref<int const&> >{});
 	}
 	{
 		auto opt{orl::Option<int>{}};
 		
-		ASSERT_EQ(opt.optional(), std::optional<orl::ref<int&> >{});
+		ASSERT_EQ(opt.optional(), std::optional<orl::Ref<int&> >{});
 	}
 	{
 		auto opt{orl::Option<int>{}};

@@ -163,12 +163,12 @@ TEST(Option, Some_9_optional) {
 	{
 		const auto opt{orl::Option<int>{7}};
 		
-		ASSERT_EQ(opt.optional(), std::optional<orl::ref<int const&> >{opt.except()});
+		ASSERT_EQ(opt.optional(), std::optional<orl::Ref<int const&> >{opt.except()});
 	}
 	{
 		auto opt{orl::Option<int>{7}};
 		
-		ASSERT_EQ(opt.optional(), std::optional<orl::ref<int&> >{opt.except()});
+		ASSERT_EQ(opt.optional(), std::optional<orl::Ref<int&> >{opt.except()});
 	}
 	{
 		auto opt{orl::Option<int>{7}};

@@ -15,6 +15,6 @@ namespace orl {
 	}
 	
 	template<typename T>
-	using ref = typename detail::Reference<T>::type;
+	using Ref = typename detail::Reference<T>::type;
 }
 

@@ -225,19 +225,19 @@ namespace orl {
 	}
 	
 	template<typename T_>
-	auto Option<T_>::optional() const& noexcept -> std::optional<ref<T_ const&> > {
+	auto Option<T_>::optional() const& noexcept -> std::optional<Ref<T_ const&> > {
 		if(data_.is_some()) {
-			return std::optional<ref<T_ const&> >{data_.some()};
+			return std::optional<Ref<T_ const&> >{data_.some()};
 		}
-		return std::optional<ref<T_ const&> >{};
+		return std::optional<Ref<T_ const&> >{};
 	}
 	
 	template<typename T_>
-	auto Option<T_>::optional()& noexcept -> std::optional<ref<T_&> > {
+	auto Option<T_>::optional()& noexcept -> std::optional<Ref<T_&> > {
 		if(data_.is_some()) {
-			return std::optional<ref<T_&> >{data_.some()};
+			return std::optional<Ref<T_&> >{data_.some()};
 		}
-		return std::optional<ref<T_&> >{};
+		return std::optional<Ref<T_&> >{};
 	}
 	
 	template<typename T_>

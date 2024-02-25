@@ -38,7 +38,7 @@ namespace orl {
 	template<typename T_, typename E_>
 	class Result {
 	protected:
-		using Data = std::variant<ref<T_>, ref<E_> >;
+		using Data = std::variant<Ref<T_>, Ref<E_> >;
 	
 	public:
 		static auto Ok(T_ value) noexcept -> Result<T_, E_>;
