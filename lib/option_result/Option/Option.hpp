@@ -135,7 +135,25 @@ namespace orl {
 		auto operator&&(Option<T> const& other) const& noexcept -> Option<std::tuple<T_ const&, T const&> >;
 		
 		template<typename T>
+		auto operator&&(Option<T> const& other)& noexcept -> Option<std::tuple<T_&, T const&> >;
+		
+		template<typename T>
+		auto operator&&(Option<T> const& other)&& noexcept -> Option<std::tuple<T_, T const&> >;
+		
+		template<typename T>
+		auto operator&&(Option<T>& other) const& noexcept -> Option<std::tuple<T_ const&, T&> >;
+		
+		template<typename T>
 		auto operator&&(Option<T>& other)& noexcept -> Option<std::tuple<T_&, T&> >;
+		
+		template<typename T>
+		auto operator&&(Option<T>& other)&& noexcept -> Option<std::tuple<T_, T&> >;
+		
+		template<typename T>
+		auto operator&&(Option<T>&& other) const& noexcept -> Option<std::tuple<T_ const&, T> >;
+		
+		template<typename T>
+		auto operator&&(Option<T>&& other)& noexcept -> Option<std::tuple<T_&, T> >;
 		
 		template<typename T>
 		auto operator&&(Option<T>&& other)&& noexcept -> Option<std::tuple<T_, T> >;

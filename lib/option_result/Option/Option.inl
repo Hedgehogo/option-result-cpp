@@ -313,9 +313,63 @@ namespace orl {
 	
 	template<typename T_>
 	template<typename T>
+	auto Option<T_>::operator&&(Option<T> const& other)& noexcept -> Option<std::tuple<T_&, T const&> > {
+		if(data_.is_some() && other.is_some()) {
+			return {{data_.some(), other.some()}};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	template<typename T>
+	auto Option<T_>::operator&&(Option<T> const& other)&& noexcept -> Option<std::tuple<T_, T const&> > {
+		if(data_.is_some() && other.is_some()) {
+			return {{std::forward<T_>(data_.some()), other.some()}};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	template<typename T>
+	auto Option<T_>::operator&&(Option<T>& other) const& noexcept -> Option<std::tuple<T_ const&, T&> > {
+		if(data_.is_some() && other.is_some()) {
+			return {{data_.some(), other.some()}};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	template<typename T>
 	auto Option<T_>::operator&&(Option<T>& other)& noexcept -> Option<std::tuple<T_&, T&> > {
 		if(data_.is_some() && other.is_some()) {
 			return {{data_.some(), other.some()}};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	template<typename T>
+	auto Option<T_>::operator&&(Option<T>& other)&& noexcept -> Option<std::tuple<T_, T&> > {
+		if(data_.is_some() && other.is_some()) {
+			return {{std::forward<T_>(data_.some()), other.some()}};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	template<typename T>
+	auto Option<T_>::operator&&(Option<T>&& other) const& noexcept -> Option<std::tuple<T_ const&, T> > {
+		if(data_.is_some() && other.is_some()) {
+			return {{data_.some(), std::move(other).some()}};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	template<typename T>
+	auto Option<T_>::operator&&(Option<T>&& other)& noexcept -> Option<std::tuple<T_&, T> > {
+		if(data_.is_some() && other.is_some()) {
+			return {{data_.some(), std::move(other).some()}};
 		}
 		return {};
 	}
