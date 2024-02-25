@@ -225,6 +225,22 @@ namespace orl {
 	}
 	
 	template<typename T_>
+	auto Option<T_>::ref() const& -> Option<T_ const&> {
+		if(data_.is_some()) {
+			return {data_.some()};
+		}
+		return {};
+	}
+	
+	template<typename T_>
+	auto Option<T_>::ref()& -> Option<T_&> {
+		if(data_.is_some()) {
+			return {data_.some()};
+		}
+		return {};
+	}
+	
+	template<typename T_>
 	auto Option<T_>::optional() const& noexcept -> std::optional<Ref<T_ const&> > {
 		if(data_.is_some()) {
 			return std::optional<Ref<T_ const&> >{data_.some()};

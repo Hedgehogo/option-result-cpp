@@ -145,6 +145,10 @@ namespace orl {
 		template<typename F>
 		auto error_and_then(F fn)&& -> Result<T_, ResultErrorT<std::invoke_result_t<F, E_>, T_> >;
 		
+		auto ref() const& -> Result<T_ const&, E_ const&>;
+		
+		auto ref()& -> Result<T_&, E_&>;
+		
 		auto except() const& -> T_ const&;
 		
 		auto except()& -> T_&;

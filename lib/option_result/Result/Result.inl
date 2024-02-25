@@ -368,6 +368,24 @@ namespace orl {
 	}
 	
 	template<typename T_, typename E_>
+	auto Result<T_, E_>::ref() const& -> Result<const T_&, const E_&> {
+		using Return = Result<T_ const&, E_ const&>;
+		if(is_ok()) {
+			return Return::Ok(ok());
+		}
+		return Return::Error(error());
+	}
+	
+	template<typename T_, typename E_>
+	auto Result<T_, E_>::ref()& -> Result<T_&, E_&> {
+		using Return = Result<T_&, E_&>;
+		if(is_ok()) {
+			return Return::Ok(ok());
+		}
+		return Return::Error(error());
+	}
+	
+	template<typename T_, typename E_>
 	template<typename T, typename E>
 	auto Result<T_, E_>::operator==(Result<T, E> const& other) const noexcept -> bool {
 		if(is_ok() == other.is_ok()) {
