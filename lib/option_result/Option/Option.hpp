@@ -161,6 +161,12 @@ namespace orl {
 	template<typename T>
 	auto operator&&(bool first, Option<T>&& second) noexcept -> Option<T>;
 	
+	template<typename T>
+	auto rv_or_clone(T object) -> T;
+	
+	template<typename T>
+	auto clone(T const& object) -> T;
+	
 	namespace detail {
 		template<typename T_>
 		class OptionImpl {

@@ -385,6 +385,16 @@ namespace orl {
 		return std::move(second) && first;
 	}
 	
+	template<typename T>
+	auto rv_or_clone(T object) -> T {
+		return std::move(object);
+	}
+	
+	template<typename T>
+	auto clone(const T& object) -> T {
+		return T{object};
+	}
+	
 	namespace detail {
 		template<typename T_>
 		OptionImpl<T_>::OptionImpl(T_ data) noexcept : data_(std::forward<T_>(data)) {
