@@ -18,7 +18,7 @@ TEST(Result, Ok_0) {
 
 TEST(Result, Ok_1_ok) {
 	{
-		const auto res{orl::Result<int, int>::Ok(7)};
+		auto const res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(&res.ok(), &res.except());
 	}
@@ -42,7 +42,7 @@ TEST(Result, Ok_2_is_ok) {
 
 TEST(Result, Ok_3_ok_or) {
 	{
-		const auto res{orl::Result<int, int>::Ok(7)};
+		auto const res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(res.ok_or(5), 7);
 	}
@@ -61,7 +61,7 @@ TEST(Result, Ok_3_ok_or) {
 
 TEST(Result, Ok_4_ok_or_else) {
 	{
-		const auto res{orl::Result<int, int>::Ok(7)};
+		auto const res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(res.ok_or_else([]() -> int {
 			return 5;
@@ -95,7 +95,7 @@ TEST(Result, Ok_5_ok_or_ptr) {
 
 TEST(Result, Ok_6_map_ok) {
 	{
-		const auto res{orl::Result<int, int>::Ok(7)};
+		auto const res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(res.map_ok([](int const& ok) {
 			return char('a' + char(ok));
@@ -119,7 +119,7 @@ TEST(Result, Ok_6_map_ok) {
 
 TEST(Result, Ok_7_ok_and_then) {
 	{
-		const auto res{orl::Result<int, int>::Ok(7)};
+		auto const res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(res.ok_and_then([](int const& ok) {
 			return orl::Result<char, int const&>::Ok(char('a' + char(ok)));
@@ -149,7 +149,7 @@ TEST(Result, Ok_8_is_error) {
 
 TEST(Result, Ok_9_error_or) {
 	{
-		const auto res{orl::Result<int, int>::Ok(7)};
+		auto const res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(res.error_or(19), 19);
 	}
@@ -168,7 +168,7 @@ TEST(Result, Ok_9_error_or) {
 
 TEST(Result, Ok_10_error_or_else) {
 	{
-		const auto res{orl::Result<int, int>::Ok(7)};
+		auto const res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(res.error_or_else([]() -> int {
 			return 19;
@@ -202,7 +202,7 @@ TEST(Result, Ok_11_error_or_ptr) {
 
 TEST(Result, Ok_12_map_error) {
 	{
-		const auto res{orl::Result<int, int>::Ok(7)};
+		auto const res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(res.map_error([](int const& error) {
 			return char('a' + char(error));
@@ -226,7 +226,7 @@ TEST(Result, Ok_12_map_error) {
 
 TEST(Result, Ok_13_error_and_then) {
 	{
-		const auto res{orl::Result<int, int>::Ok(7)};
+		auto const res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(res.error_and_then([](int const& error) {
 			return orl::Result<int const&, char>::Error(char('a' + char(error)));
@@ -250,7 +250,7 @@ TEST(Result, Ok_13_error_and_then) {
 
 TEST(Result, Ok_14_except) {
 	{
-		const auto res{orl::Result<int, int>::Ok(7)};
+		auto const res{orl::Result<int, int>::Ok(7)};
 		
 		ASSERT_EQ(res.except(), 7);
 	}

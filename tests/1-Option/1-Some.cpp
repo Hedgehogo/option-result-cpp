@@ -18,7 +18,7 @@ TEST(Option, Some_0) {
 
 TEST(Option, Some_1_some) {
 	{
-		const auto opt{orl::Option<int>{7}};
+		auto const opt{orl::Option<int>{7}};
 		
 		ASSERT_EQ(&opt.some(), &opt.except());
 	}
@@ -42,7 +42,7 @@ TEST(Option, Some_2_is_some) {
 
 TEST(Option, Some_3_some_or) {
 	{
-		const auto opt{orl::Option<int>{7}};
+		auto const opt{orl::Option<int>{7}};
 		
 		ASSERT_EQ(opt.some_or(5), 7);
 	}
@@ -61,7 +61,7 @@ TEST(Option, Some_3_some_or) {
 
 TEST(Option, Some_4_some_or_else) {
 	{
-		const auto opt{orl::Option<int>{7}};
+		auto const opt{orl::Option<int>{7}};
 		
 		ASSERT_EQ(opt.some_or_else([]() -> int {
 			return 5;
@@ -95,7 +95,7 @@ TEST(Option, Some_5_some_or_ptr) {
 
 TEST(Option, Some_6_map) {
 	{
-		const auto opt{orl::Option<int>{7}};
+		auto const opt{orl::Option<int>{7}};
 		
 		ASSERT_EQ(opt.map([](int const& some) {
 			return char('a' + char(some));
@@ -119,7 +119,7 @@ TEST(Option, Some_6_map) {
 
 TEST(Option, None_7_and_then) {
 	{
-		const auto opt{orl::Option<int>{7}};
+		auto const opt{orl::Option<int>{7}};
 		
 		ASSERT_EQ(opt.and_then([](int const& some) {
 			return orl::Option<char>{char('a' + char(some))};
@@ -143,7 +143,7 @@ TEST(Option, None_7_and_then) {
 
 TEST(Option, Some_8_except) {
 	{
-		const auto opt{orl::Option<int>{7}};
+		auto const opt{orl::Option<int>{7}};
 		
 		ASSERT_EQ(opt.except(std::runtime_error("")), 7);
 	}
@@ -161,7 +161,7 @@ TEST(Option, Some_8_except) {
 
 TEST(Option, Some_9_optional) {
 	{
-		const auto opt{orl::Option<int>{7}};
+		auto const opt{orl::Option<int>{7}};
 		
 		ASSERT_EQ(opt.optional(), std::optional<orl::Ref<int const&> >{opt.except()});
 	}
@@ -179,7 +179,7 @@ TEST(Option, Some_9_optional) {
 
 TEST(Option, None_10_range_based_for) {
 	{
-		const auto opt{orl::Option<int>{7}};
+		auto const opt{orl::Option<int>{7}};
 		auto check{0};
 		
 		for(auto const& value: opt) {
@@ -204,19 +204,19 @@ TEST(Option, Some_11_operator_and) {
 	{
 		{
 			{
-				const auto first_opt{orl::Option<int>{7}};
-				const auto second_opt{orl::Option<int>{}};
+				auto const first_opt{orl::Option<int>{7}};
+				auto const second_opt{orl::Option<int>{}};
 				
 				ASSERT_EQ(first_opt && second_opt, (orl::Option<std::tuple<int const&, int const&> >{}));
 			}
 			{
-				const auto first_opt{orl::Option<int>{7}};
+				auto const first_opt{orl::Option<int>{7}};
 				auto second_opt{orl::Option<int>{}};
 				
 				ASSERT_EQ(first_opt && second_opt, (orl::Option<std::tuple<int const&, int&> >{}));
 			}
 			{
-				const auto first_opt{orl::Option<int>{7}};
+				auto const first_opt{orl::Option<int>{7}};
 				auto second_opt{orl::Option<int>{}};
 				
 				ASSERT_EQ(first_opt && std::move(second_opt), (orl::Option<std::tuple<int const&, int> >{}));
@@ -225,7 +225,7 @@ TEST(Option, Some_11_operator_and) {
 		{
 			{
 				auto first_opt{orl::Option<int>{7}};
-				const auto second_opt{orl::Option<int>{}};
+				auto const second_opt{orl::Option<int>{}};
 				
 				ASSERT_EQ(first_opt && second_opt, (orl::Option<std::tuple<int&, int const&> >{}));
 			}
@@ -245,7 +245,7 @@ TEST(Option, Some_11_operator_and) {
 		{
 			{
 				auto first_opt{orl::Option<int>{7}};
-				const auto second_opt{orl::Option<int>{}};
+				auto const second_opt{orl::Option<int>{}};
 				
 				ASSERT_EQ(std::move(first_opt) && second_opt, (orl::Option<std::tuple<int, int const&> >{}));
 			}
@@ -266,19 +266,19 @@ TEST(Option, Some_11_operator_and) {
 	{
 		{
 			{
-				const auto first_opt{orl::Option<int>{7}};
-				const auto second_opt{orl::Option<int>{9}};
+				auto const first_opt{orl::Option<int>{7}};
+				auto const second_opt{orl::Option<int>{9}};
 				
 				ASSERT_EQ(first_opt && second_opt, (orl::Option<std::tuple<int const&, int const&> >{{first_opt.except(), second_opt.except()}}));
 			}
 			{
-				const auto first_opt{orl::Option<int>{7}};
+				auto const first_opt{orl::Option<int>{7}};
 				auto second_opt{orl::Option<int>{9}};
 				
 				ASSERT_EQ(first_opt && second_opt, (orl::Option<std::tuple<int const&, int&> >{{first_opt.except(), second_opt.except()}}));
 			}
 			{
-				const auto first_opt{orl::Option<int>{7}};
+				auto const first_opt{orl::Option<int>{7}};
 				auto second_opt{orl::Option<int>{9}};
 				
 				ASSERT_EQ(first_opt && std::move(second_opt), (orl::Option<std::tuple<int const&, int> >{{first_opt.except(), 9}}));
@@ -287,7 +287,7 @@ TEST(Option, Some_11_operator_and) {
 		{
 			{
 				auto first_opt{orl::Option<int>{7}};
-				const auto second_opt{orl::Option<int>{9}};
+				auto const second_opt{orl::Option<int>{9}};
 				
 				ASSERT_EQ(first_opt && second_opt, (orl::Option<std::tuple<int&, int const&> >{{first_opt.except(), second_opt.except()}}));
 			}
@@ -307,7 +307,7 @@ TEST(Option, Some_11_operator_and) {
 		{
 			{
 				auto first_opt{orl::Option<int>{7}};
-				const auto second_opt{orl::Option<int>{9}};
+				auto const second_opt{orl::Option<int>{9}};
 				
 				ASSERT_EQ(std::move(first_opt) && second_opt, (orl::Option<std::tuple<int, int const&> >{{7, second_opt.except()}}));
 			}
@@ -327,7 +327,7 @@ TEST(Option, Some_11_operator_and) {
 	}
 	{
 		{
-			const auto opt{orl::Option<int>{7}};
+			auto const opt{orl::Option<int>{7}};
 			
 			ASSERT_EQ(opt && false, orl::Option<int const&>{});
 			ASSERT_EQ(false && opt, orl::Option<int const&>{});
@@ -358,8 +358,8 @@ TEST(Option, Some_11_operator_and) {
 TEST(Option, Some_12_operator_or) {
 	{
 		{
-			const auto first_opt{orl::Option<int>{7}};
-			const auto second_opt{orl::Option<int>{}};
+			auto const first_opt{orl::Option<int>{7}};
+			auto const second_opt{orl::Option<int>{}};
 			
 			ASSERT_EQ(first_opt || second_opt, orl::Option<int const&>{first_opt.except()});
 		}
@@ -378,8 +378,8 @@ TEST(Option, Some_12_operator_or) {
 	}
 	{
 		{
-			const auto first_opt{orl::Option<int>{7}};
-			const auto second_opt{orl::Option<int>{9}};
+			auto const first_opt{orl::Option<int>{7}};
+			auto const second_opt{orl::Option<int>{9}};
 			
 			ASSERT_EQ(first_opt || second_opt, orl::Option<int const&>{first_opt.except()});
 		}
