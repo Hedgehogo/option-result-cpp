@@ -35,6 +35,8 @@ namespace orl {
 	template<typename T_>
 	class Option {
 	public:
+		using SomeType = T_;
+		
 		Option(T_ data) noexcept;
 		
 		Option() noexcept;

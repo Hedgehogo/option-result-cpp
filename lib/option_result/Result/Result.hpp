@@ -41,6 +41,9 @@ namespace orl {
 		using Data = std::variant<Ref<T_>, Ref<E_> >;
 	
 	public:
+		using OkType = T_;
+		using ErrorType = E_;
+		
 		static auto Ok(T_ value) noexcept -> Result<T_, E_>;
 		
 		static auto Error(E_ value) noexcept -> Result<T_, E_>;
